@@ -37,6 +37,7 @@ export interface OpenApiSpec {
     name: string;
     type: string;
     in: string;
+    required?: boolean;
     schema: SchemaRef;
   }
   

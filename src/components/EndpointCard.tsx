@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, CardContent, Typography, Chip, List, ListItem, ListItemText, Box, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import React, { useState } from "react";
+import { Card, CardContent, Typography, Chip, List, ListItem, ListItemText, Box, Accordion, AccordionSummary, AccordionDetails, TextField, Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material"; // For the expand icon
 import { Parameter, Schema } from "../interfaces/openApiInterfaces";
 import { Response } from "../interfaces/openApiInterfaces";
@@ -29,13 +29,11 @@ const getSchemaFields = (ref: string, definitions: Record<string, any>) => {
       }))
     : [];
 
-    console.log(schema.description, fields);
   return {
     description: schema.description || "",
     fields,
   };
 };
-
 
 const EndpointCard: React.FC<EndpointCardProps> = ({
   method,
@@ -54,6 +52,29 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
     post: "success",
     put: "warning",
     delete: "error",
+  };
+
+  const [queryParams, setQueryParams] = useState<Record<string, string>>({});
+
+  const handleQueryParamChange = (param: string, value: string) => {
+    setQueryParams(prevParams => ({
+      ...prevParams,
+      [param]: value,
+    }));
+  };
+
+  const buildPathWithQueryParams = () => {
+    let newPath = path;
+    const queryStrings = Object.entries(queryParams)
+      .filter(([_, value]) => value !== "") // Skip empty values
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join("&");
+  
+    if (queryStrings) {
+      newPath += `?${queryStrings}`;
+    }
+  
+    return newPath;
   };
 
   return (
@@ -77,7 +98,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
             component="code"
             sx={{ fontSize: "0.875rem" }}
           >
-            {path.replace('/', '')}
+            {buildPathWithQueryParams()}
           </Typography>
         </Box>
         <Typography variant="body2" paragraph>
@@ -161,9 +182,17 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                         <ListItemText
                           primary={
                             <span>
-                              <code>{param.name}</code> <em>({param.type})</em>
+                              <code>{param.name}</code>
                             </span>
                           }
+                        />
+                        <TextField
+                          label={param.type}
+                          variant="outlined"
+                          size="small"
+                          style={{ maxWidth: '400px',marginLeft: '10px' }}
+                          value={queryParams[param.name] || ""}
+                          onChange={(e) => handleQueryParamChange(param.name, e.target.value)}
                         />
                       </ListItem>
                     ))}
