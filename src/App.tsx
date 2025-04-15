@@ -1,14 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import ApiExplorer from './components/APIExplorer';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from './themes/theme';
+import { AppRoutes } from './components/routes/AppRoutes';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <ApiExplorer></ApiExplorer>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <AppRoutes />
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 
-export default App;
