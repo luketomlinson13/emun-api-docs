@@ -98,9 +98,6 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
 
                 return (
                   <>
-                    <Typography variant="body2" gutterBottom>
-                      {schema.description}
-                    </Typography>
                     {schema.fields.length > 0 ? (
                       <List dense>
                         {schema.fields.map((field, idx) => (
@@ -135,7 +132,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
               <Typography variant="h6">Parameters</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Box display={'flex'} textAlign={'left'}>
+              <Box display={'flex'} textAlign={'left'} gap={2}>
               {parameters.filter(p => p.in === "path").length > 0 && (
                 <Box textAlign={'left'}>
                   <Typography variant="subtitle2" gutterBottom>Path Parameters</Typography>
