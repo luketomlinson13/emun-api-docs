@@ -2,46 +2,9 @@ import React from "react";
 import spec from "../data/openapi_agency_api.json";
 import EndpointCard from "./EndpointCard";
 
-// Define the types for OpenAPI specification
-interface Parameter {
-  name: string;
-  in: string;
-}
-
-interface Response {
-  description: string;
-}
-
-interface Operation {
-  operationId: string;
-  summary: string;
-  description: string;
-  parameters?: Parameter[];
-  responses: Record<string, Response>;
-  tags?: string[];
-}
-
-interface Paths {
-  [path: string]: Record<string, Operation>;
-}
-
-interface Tag {
-  name: string;
-}
-
-interface Info {
-  title: string;
-  version: string;
-}
-
-interface OpenApiSpec {
-  info: Info;
-  paths: Paths;
-  tags?: Tag[];
-}
-
 const ApiExplorer: React.FC = () => {
   const paths = spec.paths;
+  const definitions = spec.definitions;
   const tag = spec.tags?.[0]?.name;
 
   return (
@@ -59,6 +22,8 @@ const ApiExplorer: React.FC = () => {
             parameters={details.parameters}
             responses={details.responses}
             tag={details.tags?.[0] || tag}
+            howItWorks="This is an expanded detail where we can add specific information for how to use this particular endpoint."
+            definitions={definitions}
           />
         ))
       )}

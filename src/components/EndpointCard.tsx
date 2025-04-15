@@ -1,14 +1,8 @@
 import React from "react";
-
-// Define the types for the props
-interface Parameter {
-  name: string;
-  in: string;
-}
-
-interface Response {
-  description: string;
-}
+import { Card, CardContent, Typography, Chip, List, ListItem, ListItemText, Box, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { ExpandMore } from "@mui/icons-material"; // For the expand icon
+import { Parameter, Schema } from "../interfaces/openApiInterfaces";
+import { Response } from "../interfaces/openApiInterfaces";
 
 interface EndpointCardProps {
   method: "get" | "post" | "put" | "delete";
@@ -16,9 +10,32 @@ interface EndpointCardProps {
   summary: string;
   description: string;
   parameters?: Parameter[];
-  responses?: Record<string, Response>;
+  responses?: Response[];
   tag?: string;
+  howItWorks?: string; // Extra details for the "How it works" section
+  definitions: Record<string, Schema>;
 }
+
+const getSchemaFields = (ref: string, definitions: Record<string, any>) => {
+  const refName = ref.replace("#/definitions/", "");
+  const schema = definitions[refName];
+  if (!schema) return null;
+
+  const fields = schema.properties
+    ? Object.entries(schema.properties).map(([name, prop]: any) => ({
+        name,
+        type: prop.type || "any",
+        description: prop.description || "",
+      }))
+    : [];
+
+    console.log(schema.description, fields);
+  return {
+    description: schema.description || "",
+    fields,
+  };
+};
+
 
 const EndpointCard: React.FC<EndpointCardProps> = ({
   method,
@@ -28,50 +45,178 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
   parameters,
   responses,
   tag,
+  howItWorks,
+  definitions
 }) => {
+
   const colorMap: Record<string, string> = {
-    get: "bg-blue-100 text-blue-800",
-    post: "bg-green-100 text-green-800",
-    put: "bg-yellow-100 text-yellow-800",
-    delete: "bg-red-100 text-red-800",
+    get: "primary",
+    post: "success",
+    put: "warning",
+    delete: "error",
   };
 
   return (
-    <div className="mb-6 border rounded-xl p-4 shadow-sm bg-white">
-      <div className="flex items-center gap-4 mb-2">
-        <span className={`px-3 py-1 text-xs font-semibold rounded ${colorMap[method] || "bg-gray-100"}`}>
-          {method.toUpperCase()}
-        </span>
-        <code className="text-sm text-gray-700">{path}</code>
-      </div>
-      <h3 className="text-lg font-semibold">{summary}</h3>
-      <p className="text-gray-600 mb-2">{description}</p>
-      {parameters && parameters.length > 0 && (
-        <div className="mt-2 text-sm">
-          <strong>Parameters:</strong>
-          <ul className="ml-4 list-disc">
-            {parameters.map((param, idx) => (
-              <li key={idx}>
-                <code>{param.name}</code> <em>({param.in})</em>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {responses && (
-        <div className="mt-2 text-sm">
-          <strong>Responses:</strong>
-          <ul className="ml-4 list-disc">
-            {Object.entries(responses).map(([code, resp]) => (
-              <li key={code}>
-                <code>{code}</code>: {resp.description}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {tag && <div className="text-xs text-gray-500 mt-2">Tag: {tag}</div>}
-    </div>
+    <Card sx={{ marginBottom: 3, boxShadow: 3, borderRadius: 2 }}>
+      <CardContent>
+        {/* Method and Path (always visible) */}
+        <Box display="flex" alignItems="center" gap={2} paddingBottom={2}>
+          <Chip
+            label={method.toUpperCase()}
+            color={colorMap[method] as any}
+            sx={{
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              paddingX: 1,
+              paddingY: 1,
+            }}
+          />
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="code"
+            sx={{ fontSize: "0.875rem" }}
+          >
+            {path.replace('/', '')}
+          </Typography>
+        </Box>
+        <Typography variant="body2" paragraph>
+          {description}
+        </Typography>
+
+        {parameters && definitions && parameters.find(p => p.in === "body" && p.schema?.$ref) && (
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography variant="h6">Request Body</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {(() => {
+                const ref = parameters.find(p => p.in === "body")!.schema.$ref;
+                const schema = getSchemaFields(ref, definitions);
+
+                if (!schema) return <Typography>No schema found for request body.</Typography>;
+
+                return (
+                  <>
+                    <Typography variant="body2" gutterBottom>
+                      {schema.description}
+                    </Typography>
+                    {schema.fields.length > 0 ? (
+                      <List dense>
+                        {schema.fields.map((field, idx) => (
+                          <ListItem key={idx}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{field.name}</code> <em>({field.type})</em>
+                                </span>
+                              }
+                              secondary={field.description}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        This object has no defined properties.
+                      </Typography>
+                    )}
+                  </>
+                );
+              })()}
+            </AccordionDetails>
+          </Accordion>
+        )}
+
+        {/* Accordion for Parameters */}
+        {parameters && parameters.filter(p => p.in === "path" || p.in === "query").length > 0 && (
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography variant="h6">Parameters</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box display={'flex'} textAlign={'left'}>
+              {parameters.filter(p => p.in === "path").length > 0 && (
+                <Box textAlign={'left'}>
+                  <Typography variant="subtitle2" gutterBottom>Path Parameters</Typography>
+                  <List dense>
+                    {parameters.filter(p => p.in === "path").map((param, idx) => (
+                      <ListItem key={`path-${idx}`}>
+                        <ListItemText
+                          primary={
+                            <span>
+                              <code>{param.name}</code> <em>({param.type})</em>
+                            </span>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              )}
+
+              {parameters.filter(p => p.in === "query").length > 0 && (
+                <Box textAlign={'left'}>
+                  <Typography variant="subtitle2" gutterBottom>Query Parameters</Typography>
+                  <List dense>
+                    {parameters.filter(p => p.in === "query").map((param, idx) => (
+                      <ListItem key={`query-${idx}`}>
+                        <ListItemText
+                          primary={
+                            <span>
+                              <code>{param.name}</code> <em>({param.type})</em>
+                            </span>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              )}
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        )}
+
+        {/* Accordion for Responses */}
+        {responses && responses.length > 0 && (
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography variant="h6">Response Body</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <List dense>
+                {responses.map((resp, idx) => (
+                  <ListItem key={idx}>
+                    <ListItemText
+                      primary={
+                        <span>
+                          <code>{'resp.schema.type'}</code>: {resp.description}
+                        </span>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        )}
+
+        {/* Accordion for "How It Works" section */}
+        {howItWorks && (
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography variant="h6">How It Works</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant="body2" paragraph>
+                {howItWorks}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
