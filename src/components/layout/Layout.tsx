@@ -5,7 +5,7 @@ import CallIcon from '@mui/icons-material/Call';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { Outlet } from 'react-router-dom';
-import { theme } from '../themes/theme';
+import { theme } from '../../themes/theme';
 
 const NESTED_NAV: Navigation = [
   {
