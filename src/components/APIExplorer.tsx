@@ -61,8 +61,8 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
               sx={{
                 fontSize: "0.75rem",
                 fontWeight: "bold",
-                paddingX: 1,
-                paddingY: 1,
+                paddingX: 2,
+                paddingY: 2,
                 cursor: "pointer",
               }}
             />

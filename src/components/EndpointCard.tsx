@@ -13,14 +13,7 @@ import {
 import { Parameter, Schema } from "../interfaces/openApiInterfaces";
 import { Response } from "../interfaces/openApiInterfaces";
 import CustomAccordion from "./CustomAccordion";
-import { generateExampleJson, getSchemaFields } from "../functions/groupPaths";
-
-type SchemaField = {
-  name: string;
-  type: string;
-  description: string;
-  nestedFields?: SchemaField[];
-};
+import { Field, generateExampleJson, getSchemaFields } from "../functions/groupPaths";
 
 interface EndpointCardProps {
   method: "get" | "post" | "put" | "delete";
@@ -95,20 +88,19 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
             sx={{
               fontSize: "0.75rem",
               fontWeight: "bold",
-              paddingX: 1,
-              paddingY: 1,
+              paddingX: 2,
+              paddingY: 2,
             }}
           />
           <Typography
             variant="body2"
-            color="textSecondary"
             component="code"
-            sx={{ fontSize: "0.875rem" }}
+            sx={{ fontSize: "1.275rem" }}
           >
             {buildPathWithQueryParams()}
           </Typography>
         </Box>
-        <Typography variant="body2" paragraph>
+        <Typography variant="caption" color="textSecondary" paragraph>
           {description}
         </Typography>
 
@@ -138,19 +130,21 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                     {/* Left side - field descriptions */}
                     <Box flex={1}>
                       <List dense>
-                      {schema.fields.map((field: SchemaField, idx: number) => (
-                          <ListItem key={idx}>
-                            <ListItemText
-                              primary={
-                                <span>
-                                  <code>{field.name}</code>{" "}
-                                  <em>({field.type})</em>
-                                </span>
-                              }
-                              secondary={field.description}
-                            />
-                          </ListItem>
-                        ))}
+                        {schema.fields.map(
+                          (field: Field, idx: number) => (
+                            <ListItem key={idx}>
+                              <ListItemText
+                                primary={
+                                  <span>
+                                    <code>{field.name}</code>{" "}
+                                    <em>({field.type})</em>
+                                  </span>
+                                }
+                                secondary={field.description}
+                              />
+                            </ListItem>
+                          )
+                        )}
                       </List>
                     </Box>
 
@@ -292,19 +286,21 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                     {/* Left side - field descriptions */}
                     <Box flex={1}>
                       <List dense>
-                      {schema.fields.map((field: SchemaField, idx: number) => (
-                          <ListItem key={idx}>
-                            <ListItemText
-                              primary={
-                                <span>
-                                  <code>{field.name}</code>{" "}
-                                  <em>({field.type})</em>
-                                </span>
-                              }
-                              secondary={field.description}
-                            />
-                          </ListItem>
-                        ))}
+                        {schema.fields.map(
+                          (field: Field, idx: number) => (
+                            <ListItem key={idx}>
+                              <ListItemText
+                                primary={
+                                  <span>
+                                    <code>{field.name}</code>{" "}
+                                    <em>({field.type})</em>
+                                  </span>
+                                }
+                                secondary={field.description}
+                              />
+                            </ListItem>
+                          )
+                        )}
                       </List>
                     </Box>
 

@@ -58,56 +58,55 @@ type SchemaProperty = {
   description?: string;
   $ref?: string;
   items?: {
-    $ref: string;
+    $ref?: string;
+    type?: string;
   };
   properties?: Record<string, SchemaProperty>;
   additionalProperties?: boolean | SchemaProperty;
 };
 
+export type Field = {
+  name: string;
+  type: string;
+  description: string;
+  nestedFields?: Field[];
+};
+
 export const getSchemaFields = (
   ref: string,
   definitions: Record<string, any>,
-  depth: number = 1
-): {
-  description: string;
-  fields: {
-    name: string;
-    type: string;
-    description: string;
-    nestedFields?: any;
-  }[];
-} | null => {
+  depth: number = 3
+): { description: string; fields: Field[] } | null => {
   const refName = ref.replace("#/definitions/", "");
   const schema = definitions[refName];
   if (!schema) return null;
 
-  const fields: {
-    name: string;
-    type: string;
-    description: string;
-    nestedFields?: any;
-  }[] = [];
+  const fields: Field[] = [];
 
   if (schema.properties) {
-    for (const [name, prop] of Object.entries(schema.properties)) {
-      const property = prop as SchemaProperty; 
-      let type = property.type || "any";
-      let nestedFields;
+    for (const [name, propRaw] of Object.entries(schema.properties)) {
+      const prop = propRaw as SchemaProperty;
 
-      if (property.$ref && depth > 0) {
-        const nested = getSchemaFields(property.$ref, definitions, depth - 1);
-        type = property.$ref.replace("#/definitions/", "");
+      let type = prop.type || "any";
+      let nestedFields: Field[] | undefined;
+
+      // Case 1: Direct $ref
+      if (prop.$ref && depth > 0) {
+        const nested = getSchemaFields(prop.$ref, definitions, depth - 1);
+        type = prop.$ref.replace("#/definitions/", "");
         if (nested) nestedFields = nested.fields;
-      } else if (property.type === "array" && property.items?.$ref && depth > 0) {
-        const nested = getSchemaFields(property.items.$ref, definitions, depth - 1);
-        type = `array of ${property.items.$ref.replace("#/definitions/", "")}`;
+
+        // Case 2: Array of $ref
+      } else if (prop.type === "array" && prop.items?.$ref && depth > 0) {
+        const nested = getSchemaFields(prop.items.$ref, definitions, depth - 1);
+        type = `array of ${prop.items.$ref.replace("#/definitions/", "")}`;
         if (nested) nestedFields = nested.fields;
       }
 
       fields.push({
         name,
         type,
-        description: property.description || "",
+        description: prop.description || "",
         nestedFields,
       });
     }
