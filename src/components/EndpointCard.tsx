@@ -8,14 +8,19 @@ import {
   ListItem,
   ListItemText,
   Box,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   TextField,
 } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material"; // For the expand icon
 import { Parameter, Schema } from "../interfaces/openApiInterfaces";
 import { Response } from "../interfaces/openApiInterfaces";
+import CustomAccordion from "./CustomAccordion";
+import { generateExampleJson, getSchemaFields } from "../functions/groupPaths";
+
+type SchemaField = {
+  name: string;
+  type: string;
+  description: string;
+  nestedFields?: SchemaField[];
+};
 
 interface EndpointCardProps {
   method: "get" | "post" | "put" | "delete";
@@ -30,25 +35,6 @@ interface EndpointCardProps {
   forceExpand?: boolean | null;
 }
 
-const getSchemaFields = (ref: string, definitions: Record<string, any>) => {
-  const refName = ref.replace("#/definitions/", "");
-  const schema = definitions[refName];
-  if (!schema) return null;
-
-  const fields = schema.properties
-    ? Object.entries(schema.properties).map(([name, prop]: any) => ({
-        name,
-        type: prop.type || "any",
-        description: prop.description || "",
-      }))
-    : [];
-
-  return {
-    description: schema.description || "",
-    fields,
-  };
-};
-
 const EndpointCard: React.FC<EndpointCardProps> = ({
   method,
   path,
@@ -59,7 +45,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
   tag,
   howItWorks,
   definitions,
-  forceExpand
+  forceExpand,
 }) => {
   const colorMap: Record<string, string> = {
     get: "primary",
@@ -129,203 +115,236 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
         {parameters &&
           definitions &&
           parameters.find((p) => p.in === "body" && p.schema?.$ref) && (
-            <Accordion expanded={expanded}>
-              <AccordionSummary expandIcon={<ExpandMore />}>
-                <Typography variant="h6">Request Body</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {(() => {
-                  const ref = parameters.find((p) => p.in === "body")!.schema
-                    .$ref;
-                  const schema = getSchemaFields(ref, definitions);
+            <CustomAccordion title="Request Body" expandAll={expanded}>
+              {(() => {
+                const ref = parameters.find((p) => p.in === "body")!.schema
+                  .$ref;
+                const schema = getSchemaFields(ref, definitions);
 
-                  if (!schema)
-                    return (
-                      <Typography>No schema found for request body.</Typography>
-                    );
-
-                  const exampleJson = schema.fields.reduce(
-                    (acc, field) => {
-                      acc[field.name] =
-                        field.type === "string"
-                          ? "string"
-                          : field.type === "number"
-                            ? 0
-                            : field.type;
-                      return acc;
-                    },
-                    {} as Record<string, any>
+                if (!schema)
+                  return (
+                    <Typography>No schema found for request body.</Typography>
                   );
 
-                  return schema.fields.length > 0 ? (
-                    <Box
-                      display="flex"
-                      flexDirection={{ xs: "column", sm: "row" }}
-                      gap={2}
-                      width="100%"
-                    >
-                      {/* Left side - field descriptions */}
-                      <Box flex={1}>
-                        <List dense>
-                          {schema.fields.map((field, idx) => (
-                            <ListItem key={idx}>
-                              <ListItemText
-                                primary={
-                                  <span>
-                                    <code>{field.name}</code>{" "}
-                                    <em>({field.type})</em>
-                                  </span>
-                                }
-                                secondary={field.description}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </Box>
+                const exampleJson = generateExampleJson(schema.fields);
 
-                      {/* Right side - JSON Example */}
-                      <Box flex={1}>
-                        <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                          Example JSON
-                        </Typography>
-                        <pre
-                          style={{
-                            backgroundColor: "black",
-                            color: "lime",
-                            padding: "1em",
-                            borderRadius: "8px",
-                            overflowX: "auto",
-                            fontFamily: "monospace",
-                            fontSize: "0.9rem",
-                          }}
-                        >
-                          {JSON.stringify(exampleJson, null, 2)}
-                        </pre>
-                      </Box>
+                return schema.fields.length > 0 ? (
+                  <Box
+                    display="flex"
+                    flexDirection={{ xs: "column", sm: "row" }}
+                    gap={2}
+                    width="100%"
+                  >
+                    {/* Left side - field descriptions */}
+                    <Box flex={1}>
+                      <List dense>
+                      {schema.fields.map((field: SchemaField, idx: number) => (
+                          <ListItem key={idx}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{field.name}</code>{" "}
+                                  <em>({field.type})</em>
+                                </span>
+                              }
+                              secondary={field.description}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
                     </Box>
-                  ) : (
-                    <Typography variant="body2" color="textSecondary">
-                      This object has no defined properties.
-                    </Typography>
-                  );
-                })()}
-              </AccordionDetails>
-            </Accordion>
+
+                    {/* Right side - JSON Example */}
+                    <Box flex={1}>
+                      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                        Example JSON
+                      </Typography>
+                      <pre
+                        style={{
+                          backgroundColor: "black",
+                          color: "lime",
+                          padding: "1em",
+                          borderRadius: "8px",
+                          overflowX: "auto",
+                          fontFamily: "monospace",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        {JSON.stringify(exampleJson, null, 2)}
+                      </pre>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Typography variant="body2" color="textSecondary">
+                    This object has no defined properties.
+                  </Typography>
+                );
+              })()}
+            </CustomAccordion>
           )}
 
         {/* Accordion for Parameters */}
         {parameters &&
           parameters.filter((p) => p.in === "path" || p.in === "query").length >
             0 && (
-            <Accordion expanded={expanded}>
-              <AccordionSummary expandIcon={<ExpandMore />}>
-                <Typography variant="h6">Parameters</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box display={"flex"} textAlign={"left"} gap={2}>
-                  {parameters.filter((p) => p.in === "path").length > 0 && (
-                    <Box textAlign={"left"}>
-                      <Typography variant="subtitle2" gutterBottom>
-                        Path Parameters
-                      </Typography>
-                      <List dense>
-                        {parameters
-                          .filter((p) => p.in === "path")
-                          .map((param, idx) => (
-                            <ListItem key={`path-${idx}`}>
-                              <ListItemText
-                                primary={
-                                  <span>
-                                    <code>{param.name}</code>{" "}
-                                    <em>({param.type})</em>
-                                  </span>
-                                }
-                              />
-                            </ListItem>
-                          ))}
-                      </List>
-                    </Box>
-                  )}
+            <CustomAccordion title="Parameters" expandAll={expanded}>
+              <Box display={"flex"} textAlign={"left"} gap={2}>
+                {parameters.filter((p) => p.in === "path").length > 0 && (
+                  <Box textAlign={"left"}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Path Parameters
+                    </Typography>
+                    <List dense>
+                      {parameters
+                        .filter((p) => p.in === "path")
+                        .map((param, idx) => (
+                          <ListItem key={`path-${idx}`}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{param.name}</code>{" "}
+                                  <em>({param.type})</em>
+                                </span>
+                              }
+                            />
+                          </ListItem>
+                        ))}
+                    </List>
+                  </Box>
+                )}
 
-                  {parameters.filter((p) => p.in === "query").length > 0 && (
-                    <Box textAlign={"left"}>
-                      <Typography variant="subtitle2" gutterBottom>
-                        Query Parameters
-                      </Typography>
-                      <List dense>
-                        {parameters
-                          .filter((p) => p.in === "query")
-                          .map((param, idx) => (
-                            <ListItem key={`query-${idx}`}>
-                              <ListItemText
-                                primary={
-                                  <span>
-                                    <code>{param.name}</code>
-                                  </span>
-                                }
-                              />
-                              <TextField
-                                label={param.type}
-                                variant="outlined"
-                                size="small"
-                                style={{
-                                  maxWidth: "400px",
-                                  marginLeft: "10px",
-                                }}
-                                value={queryParams[param.name] || ""}
-                                onChange={(e) =>
-                                  handleQueryParamChange(
-                                    param.name,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </ListItem>
-                          ))}
-                      </List>
-                    </Box>
-                  )}
-                </Box>
-              </AccordionDetails>
-            </Accordion>
+                {parameters.filter((p) => p.in === "query").length > 0 && (
+                  <Box textAlign={"left"}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Query Parameters
+                    </Typography>
+                    <List dense>
+                      {parameters
+                        .filter((p) => p.in === "query")
+                        .map((param, idx) => (
+                          <ListItem key={`query-${idx}`}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{param.name}</code>
+                                </span>
+                              }
+                            />
+                            <TextField
+                              label={param.type}
+                              variant="outlined"
+                              size="small"
+                              style={{
+                                maxWidth: "400px",
+                                marginLeft: "10px",
+                              }}
+                              value={queryParams[param.name] || ""}
+                              onChange={(e) =>
+                                handleQueryParamChange(
+                                  param.name,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </ListItem>
+                        ))}
+                    </List>
+                  </Box>
+                )}
+              </Box>
+            </CustomAccordion>
           )}
 
         {/* Accordion for Responses */}
-        {responses && responses.length > 0 && (
-          <Accordion expanded={expanded}>
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography variant="h6">Response Body</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <List dense>
-                {responses.map((resp, idx) => (
-                  <ListItem key={idx}>
-                    <ListItemText
-                      primary={
-                        <span>
-                          <code>{"resp.schema.type"}</code>: {resp.description}
-                        </span>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </AccordionDetails>
-          </Accordion>
+        {responses && Object.keys(responses).length > 0 && (
+          <CustomAccordion title="Response Body" expandAll={expanded}>
+            <List dense>
+              {(() => {
+                const successResponse = Object.values(responses).find(
+                  (r) => r.description === "Success"
+                );
+
+                const ref = successResponse?.schema?.$ref;
+
+                if (!ref)
+                  return (
+                    <Typography>
+                      No successful response found for request body.
+                    </Typography>
+                  );
+
+                const schema = getSchemaFields(ref, definitions);
+
+                if (!schema)
+                  return (
+                    <Typography>No schema found for response body.</Typography>
+                  );
+
+                const exampleJson = generateExampleJson(schema.fields);
+
+                return schema.fields.length > 0 ? (
+                  <Box
+                    display="flex"
+                    flexDirection={{ xs: "column", sm: "row" }}
+                    gap={2}
+                    width="100%"
+                  >
+                    {/* Left side - field descriptions */}
+                    <Box flex={1}>
+                      <List dense>
+                      {schema.fields.map((field: SchemaField, idx: number) => (
+                          <ListItem key={idx}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{field.name}</code>{" "}
+                                  <em>({field.type})</em>
+                                </span>
+                              }
+                              secondary={field.description}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
+
+                    {/* Right side - JSON Example */}
+                    <Box flex={1}>
+                      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                        Example JSON
+                      </Typography>
+                      <pre
+                        style={{
+                          backgroundColor: "black",
+                          color: "lime",
+                          padding: "1em",
+                          borderRadius: "8px",
+                          overflowX: "auto",
+                          fontFamily: "monospace",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        {JSON.stringify(exampleJson, null, 2)}
+                      </pre>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Typography variant="body2" color="textSecondary">
+                    This object has no defined response body.
+                  </Typography>
+                );
+              })()}
+            </List>
+          </CustomAccordion>
         )}
 
         {/* Accordion for "How It Works" section */}
         {howItWorks && (
-          <Accordion expanded={expanded}>
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography variant="h6">How It Works</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography variant="body2" paragraph>
-                {howItWorks}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
+          <CustomAccordion title="How It Works" expandAll={expanded}>
+            <Typography variant="body2" paragraph>
+              {howItWorks}
+            </Typography>
+          </CustomAccordion>
         )}
       </CardContent>
     </Card>

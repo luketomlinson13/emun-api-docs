@@ -6,30 +6,18 @@
   },
   "host": "emun1-agency-sandbox.ws.emuncloud.com",
   "basePath": "/",
-  "schemes": [
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/PurgeProductKitComponents": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProductKitComponents_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -57,18 +45,12 @@
     },
     "/PurgeProducts": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProducts_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -96,18 +78,12 @@
     },
     "/PurgeProductTags": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProductTags_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -135,18 +111,12 @@
     },
     "/PurgeVendorResources": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeVendorResources_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -174,18 +144,12 @@
     },
     "/GetOrders": {
       "get": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
         "description": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
         "operationId": "QueryOrders_Get",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Search",
@@ -258,18 +222,12 @@
     },
     "/SaveKitComponent": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a KitComponent record",
         "description": "Write a KitComponent record",
         "operationId": "SaveKitComponent_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -335,18 +293,12 @@
     },
     "/SaveProduct": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a Product record",
         "description": "Write a Product record",
         "operationId": "SaveProduct_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "ProductId",
@@ -589,18 +541,12 @@
     },
     "/SaveProductTag": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a ProductTag record",
         "description": "Write a ProductTag record",
         "operationId": "SaveProductTag_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -669,18 +615,12 @@
     },
     "/SaveKitComponent/{Id}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a KitComponent record",
         "description": "Write a KitComponent record",
         "operationId": "UpdateKitComponentId_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -747,18 +687,12 @@
     },
     "/UpdateOrderDownloaded/{OrderNumber}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a OrderDownloaded record",
         "description": "Write a OrderDownloaded record",
         "operationId": "UpdateOrderDownloadedOrderNumber_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "OrderNumber",
@@ -803,18 +737,12 @@
     },
     "/SaveProduct/{ProductId}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a Product record",
         "description": "Write a Product record",
         "operationId": "UpdateProductProductId_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "ProductId",
@@ -1058,18 +986,12 @@
     },
     "/SaveProductTag/{Id}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API"
-        ],
+        "tags": ["EMUN1-Agency-API"],
         "summary": "Write a ProductTag record",
         "description": "Write a ProductTag record",
         "operationId": "UpdateProductTagId_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -2114,9 +2036,7 @@
       "description": "Accept Header",
       "type": "string",
       "required": true,
-      "enum": [
-        "application/json"
-      ]
+      "enum": ["application/json"]
     }
   },
   "securityDefinitions": {

@@ -10,7 +10,6 @@ type ApiExplorerProps = {
 };
 
 const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
-  console.log(paths)
   const definitions = spec.definitions;
   const tag = spec.tags?.[0]?.name;
 
@@ -89,6 +88,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
             
+            console.log(operation.responses);
             if (!matchesMethod || !matchesSearch) return null;
             
             return (
