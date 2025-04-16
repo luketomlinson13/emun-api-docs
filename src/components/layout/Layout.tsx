@@ -1,58 +1,119 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import PersonIcon from '@mui/icons-material/Person';
-import CallIcon from '@mui/icons-material/Call';
-import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { Outlet } from 'react-router-dom';
-import { theme } from '../../themes/theme';
+import {
+  Box,
+  CssBaseline,
+  Drawer,
+  Toolbar,
+  Typography,
+  AppBar,
+  List,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+  Collapse,
+} from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { useState } from 'react';
+import openapi_json_dev from '../../data/openapi_agency_api_dev.json';
+import { groupPaths } from '../../functions/groupPaths';
+import ApiExplorer from '../APIExplorer';
 
-const NESTED_NAV: Navigation = [
-  {
-    segment: 'child-1',
-    title: 'child 1',
-    icon: <Chip label="GET" color='success' />,
-  },
-  {
-    segment: 'child-2',
-    title: 'child 2',
-    icon: <Chip label="PUT" color='warning' />,
-  },
-  {
-    segment: 'child-3',
-    title: 'child 3',
-    icon: <Chip label="DELETE" color='error' />,
-  },
-];
+const drawerWidth = 280;
 
-export default function Layout() {
+export function Layout() {
+  const groups = groupPaths(openapi_json_dev);
+  const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+  const [selectedChildLabel, setSelectedChildLabel] = useState<string | null>(null);
+  const [selectedChildPaths, setSelectedChildPaths] = useState<Record<string, any> | null>(null);
+
+  const handleGroupToggle = (label: string) => {
+    setExpandedGroup((prev) => (prev === label ? null : label));
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChildClick = (label: string, paths: Record<string, any>) => {
+    setSelectedChildLabel(label);
+    setSelectedChildPaths(paths);
+  };
+
   return (
-    <AppProvider
-      branding={{
-        logo: <img src="https://mui.com/static/logo.png" alt="MUI logo" />,
-        title: 'Emun API Docs',
-        homeUrl: '/',
-      }}
-      navigation={[
-        {
-          segment: 'parent-1',
-          title: 'Parent 1',
-          icon: <PersonIcon />,
-        },
-        {
-          segment: 'parent-2',
-          title: 'Parent 2',
-          icon: <CallIcon />,
-          children: NESTED_NAV,
-        },
-      ]}
-      theme={theme}
-    >
-      <DashboardLayout>
-        <Box sx={{ py: 4, px: 2 }}>
-          <Outlet />
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <Toolbar>
+          <img src="https://mui.com/static/logo.png" alt="Logo" style={{ height: 32, marginRight: 16 }} />
+          <Typography variant="h6" noWrap component="div">
+            Emun API Docs
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: 'auto', p: 2 }}>
+          <List>
+            {groups.map((group) => {
+              const isExpanded = expandedGroup === group.label;
+              return (
+                <Box key={group.label}>
+                  <ListItemButton onClick={() => handleGroupToggle(group.label)}>
+                    <ListItemText
+                      primary={group.label}
+                      primaryTypographyProps={{
+                        fontWeight: isExpanded ? 'bold' : 'normal',
+                      }}
+                    />
+                    <ListItemIcon sx={{ minWidth: 0 }}>
+                      {isExpanded ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemIcon>
+                  </ListItemButton>
+
+                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {group.children.map((child) => (
+                        <ListItemButton
+                          key={child.label}
+                          sx={{ pl: 4 }}
+                          selected={selectedChildLabel === child.label}
+                          onClick={() => handleChildClick(child.label, child.children)}
+                        >
+                          <ListItemText primary={child.label} />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Collapse>
+                </Box>
+              );
+            })}
+          </List>
         </Box>
-      </DashboardLayout>
-    </AppProvider>
+      </Drawer>
+
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        {selectedChildLabel && selectedChildPaths ? (
+          <>
+            <Typography variant="h4" gutterBottom>
+              {selectedChildLabel}
+            </Typography>
+            <ApiExplorer paths={selectedChildPaths} />
+          </>
+        ) : (
+          <Typography variant="h6" color="text.secondary">
+            Select an endpoint from the sidebar to get started.
+          </Typography>
+        )}
+      </Box>
+    </Box>
   );
 }

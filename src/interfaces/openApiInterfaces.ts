@@ -1,5 +1,4 @@
-// openApiInterfaces.ts
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface OpenApiSpec {
     swagger: string;
     info: Info;
@@ -21,6 +20,8 @@ export interface OpenApiSpec {
   }
   
   export interface Operation {
+    parent: string;
+    subParent: string;
     tags: string[];
     summary: string;
     description: string;

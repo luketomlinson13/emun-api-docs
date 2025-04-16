@@ -1,10 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Box, TextField, Chip, Typography, Button } from "@mui/material";
+import { Box, TextField, Chip, Button } from "@mui/material";
 import spec from "../data/openapi_agency_api.json";
 import EndpointCard from "./EndpointCard";
 
-const ApiExplorer: React.FC = () => {
-  const paths = spec.paths;
+type ApiExplorerProps = {
+  paths: Record<string, any>;
+};
+
+const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
+  console.log(paths)
   const definitions = spec.definitions;
   const tag = spec.tags?.[0]?.name;
 
@@ -14,19 +20,14 @@ const ApiExplorer: React.FC = () => {
 
   const handleMethodChipClick = (method: string) => {
     setMethodFilter((prev) =>
-      prev.includes(method)
-        ? prev.filter((m) => m !== method)
-        : [...prev, method]
+      prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method]
     );
   };
 
   const handleExpandAll = () => setExpandAll(true);
   const handleCollapseAll = () => setExpandAll(false);
 
-  const methodColors: Record<
-    string,
-    "primary" | "success" | "warning" | "error"
-  > = {
+  const methodColors: Record<string, "primary" | "success" | "warning" | "error"> = {
     get: "primary",
     post: "success",
     put: "warning",
@@ -35,14 +36,6 @@ const ApiExplorer: React.FC = () => {
 
   return (
     <div className="p-6">
-      <Typography variant="h4" fontWeight="bold" gutterBottom>
-        {spec.info.title}
-      </Typography>
-      <Typography variant="body1" color="textSecondary" gutterBottom>
-        Version: {spec.info.version}
-      </Typography>
-
-      {/* Search and Method Filter */}
       <Box
         display="flex"
         flexWrap="wrap"
@@ -50,7 +43,6 @@ const ApiExplorer: React.FC = () => {
         alignItems="center"
         mb={3}
       >
-        {/* Left: Search + Method Chips */}
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
           <TextField
             label="Search endpoints"
@@ -78,7 +70,6 @@ const ApiExplorer: React.FC = () => {
           ))}
         </Box>
 
-        {/* Right: Expand/Collapse */}
         <Box display="flex" gap={1} mt={{ xs: 2, sm: 0 }}>
           <Button variant="outlined" size="small" onClick={handleExpandAll}>
             Expand All
@@ -89,34 +80,34 @@ const ApiExplorer: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Endpoint Cards */}
-      {Object.entries(paths).map(([path, methods]) =>
-        Object.entries(methods).map(([method, details]: any) => {
-          const matchesMethod =
+      {Object.entries(paths).map(([, api]) => 
+      {
+          const {path, method, operation} = api;
+            const matchesMethod =
             methodFilter.length === 0 || methodFilter.includes(method);
-          const matchesSearch = path
+            const matchesSearch = path
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
-
-          if (!matchesMethod || !matchesSearch) return null;
-
-          return (
-            <EndpointCard
-              key={details.operationId}
-              method={method as "get" | "post" | "put" | "delete"}
-              path={path}
-              summary={details.summary}
-              description={details.description}
-              parameters={details.parameters}
-              responses={details.responses}
-              tag={details.tags?.[0] || tag}
-              howItWorks="This is an expanded detail where we can add specific information for how to use this particular endpoint."
-              definitions={definitions}
-              forceExpand={expandAll}
-            />
-          );
-        })
-      )}
+            
+            if (!matchesMethod || !matchesSearch) return null;
+            
+            return (
+              <EndpointCard
+                key={path.path}
+                method={method as "get" | "post" | "put" | "delete"}
+                path={path}
+                summary={operation.summary}
+                description={operation.description}
+                parameters={operation.parameters}
+                responses={operation.responses}
+                tag={operation.tags?.[0] || tag}
+                howItWorks="This is an expanded detail where we can add specific information for how to use this particular endpoint."
+                definitions={definitions}
+                forceExpand={expandAll}
+              />
+            );
+          })
+      }
     </div>
   );
 };
