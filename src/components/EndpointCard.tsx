@@ -9,11 +9,20 @@ import {
   ListItemText,
   Box,
   TextField,
+  Divider,
 } from "@mui/material";
 import { Parameter, Schema } from "../interfaces/openApiInterfaces";
 import { Response } from "../interfaces/openApiInterfaces";
 import CustomAccordion from "./CustomAccordion";
-import { Field, generateExampleJson, getSchemaFields } from "../functions/groupPaths";
+import {
+  Field,
+  generateExampleJson,
+  getSchemaFields,
+} from "../functions/groupPaths";
+import SchemaIcon from "@mui/icons-material/Schema";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import HttpIcon from "@mui/icons-material/Http";
+import TuneIcon from "@mui/icons-material/Tune";
 
 interface EndpointCardProps {
   method: "get" | "post" | "put" | "delete";
@@ -107,7 +116,11 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
         {parameters &&
           definitions &&
           parameters.find((p) => p.in === "body" && p.schema?.$ref) && (
-            <CustomAccordion title="Request Body" expandAll={expanded}>
+            <CustomAccordion
+              title="Request Body"
+              icon={<SchemaIcon />}
+              expandAll={expanded}
+            >
               {(() => {
                 const ref = parameters.find((p) => p.in === "body")!.schema
                   .$ref;
@@ -130,21 +143,19 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                     {/* Left side - field descriptions */}
                     <Box flex={1}>
                       <List dense>
-                        {schema.fields.map(
-                          (field: Field, idx: number) => (
-                            <ListItem key={idx}>
-                              <ListItemText
-                                primary={
-                                  <span>
-                                    <code>{field.name}</code>{" "}
-                                    <em>({field.type})</em>
-                                  </span>
-                                }
-                                secondary={field.description}
-                              />
-                            </ListItem>
-                          )
-                        )}
+                        {schema.fields.map((field: Field, idx: number) => (
+                          <ListItem key={idx}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{field.name}</code>{" "}
+                                  <em>({field.type})</em>
+                                </span>
+                              }
+                              secondary={field.description}
+                            />
+                          </ListItem>
+                        ))}
                       </List>
                     </Box>
 
@@ -181,13 +192,18 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
         {parameters &&
           parameters.filter((p) => p.in === "path" || p.in === "query").length >
             0 && (
-            <CustomAccordion title="Parameters" expandAll={expanded}>
+            <CustomAccordion
+              title="Parameters"
+              icon={<TuneIcon />}
+              expandAll={expanded}
+            >
               <Box display={"flex"} textAlign={"left"} gap={2}>
                 {parameters.filter((p) => p.in === "path").length > 0 && (
                   <Box textAlign={"left"}>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                       Path Parameters
                     </Typography>
+                    <Divider sx={{ mb: 2 }} />
                     <List dense>
                       {parameters
                         .filter((p) => p.in === "path")
@@ -209,9 +225,10 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
 
                 {parameters.filter((p) => p.in === "query").length > 0 && (
                   <Box textAlign={"left"}>
-                    <Typography variant="subtitle2" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                       Query Parameters
                     </Typography>
+                    <Divider sx={{ mb: 2 }} />
                     <List dense>
                       {parameters
                         .filter((p) => p.in === "query")
@@ -251,7 +268,11 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
 
         {/* Accordion for Responses */}
         {responses && Object.keys(responses).length > 0 && (
-          <CustomAccordion title="Response Body" expandAll={expanded}>
+          <CustomAccordion
+            title="Response"
+            icon={<HttpIcon />}
+            expandAll={expanded}
+          >
             <List dense>
               {(() => {
                 const successResponse = Object.values(responses).find(
@@ -285,30 +306,33 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                   >
                     {/* Left side - field descriptions */}
                     <Box flex={1}>
+                      <Typography variant="h6" gutterBottom>
+                        Properties
+                      </Typography>
+                      <Divider sx={{ mb: 2 }} />
                       <List dense>
-                        {schema.fields.map(
-                          (field: Field, idx: number) => (
-                            <ListItem key={idx}>
-                              <ListItemText
-                                primary={
-                                  <span>
-                                    <code>{field.name}</code>{" "}
-                                    <em>({field.type})</em>
-                                  </span>
-                                }
-                                secondary={field.description}
-                              />
-                            </ListItem>
-                          )
-                        )}
+                        {schema.fields.map((field: Field, idx: number) => (
+                          <ListItem key={idx}>
+                            <ListItemText
+                              primary={
+                                <span>
+                                  <code>{field.name}</code>{" "}
+                                  <em>({field.type})</em>
+                                </span>
+                              }
+                              secondary={field.description}
+                            />
+                          </ListItem>
+                        ))}
                       </List>
                     </Box>
 
                     {/* Right side - JSON Example */}
                     <Box flex={1}>
-                      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                      <Typography variant="h6" gutterBottom>
                         Example JSON
                       </Typography>
+                      <Divider sx={{ mb: 2 }} />
                       <pre
                         style={{
                           backgroundColor: "black",
@@ -336,7 +360,11 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
 
         {/* Accordion for "How It Works" section */}
         {howItWorks && (
-          <CustomAccordion title="How It Works" expandAll={expanded}>
+          <CustomAccordion
+            title="How It Works"
+            icon={<HelpOutlineIcon />}
+            expandAll={expanded}
+          >
             <Typography variant="body2" paragraph>
               {howItWorks}
             </Typography>

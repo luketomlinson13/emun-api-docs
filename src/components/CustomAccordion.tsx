@@ -4,19 +4,23 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
+  Box,
 } from "@mui/material";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface CustomAccordionProps {
   title: string;
-  expandAll: boolean; // controlled by parent
+  expandAll: boolean;
   children: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
   title,
   expandAll,
   children,
+  icon,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -32,7 +36,28 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   return (
     <Accordion expanded={expanded} onChange={toggleExpanded}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6">{title}</Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          {icon && (
+            <Box
+              sx={{
+                mr: 1,
+                color: "primary.main",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {React.cloneElement(icon as React.ReactElement, {
+                sx: { fontSize: 14 },
+              })}
+            </Box>
+          )}
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", textTransform: "uppercase" }}
+          >
+            {title}
+          </Typography>
+        </Box>
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>
     </Accordion>
