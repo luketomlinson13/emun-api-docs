@@ -93,7 +93,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
             
             return (
               <EndpointCard
-                key={path.path}
+                key={operation.operationId} // ✅ unique key
                 method={method as "get" | "post" | "put" | "delete"}
                 path={path}
                 summary={operation.summary}
