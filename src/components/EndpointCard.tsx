@@ -20,7 +20,7 @@ import {
   getSchemaFields,
 } from "../functions/groupPaths";
 import SchemaIcon from "@mui/icons-material/Schema";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import HttpIcon from "@mui/icons-material/Http";
 import TuneIcon from "@mui/icons-material/Tune";
 
@@ -40,11 +40,9 @@ interface EndpointCardProps {
 const EndpointCard: React.FC<EndpointCardProps> = ({
   method,
   path,
-  summary,
   description,
   parameters,
   responses,
-  tag,
   howItWorks,
   definitions,
   forceExpand,
@@ -122,18 +120,35 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
               expandAll={expanded}
             >
               {(() => {
-                const ref = parameters.find((p) => p.in === "body")!.schema
-                  .$ref;
-                const schema = getSchemaFields(ref, definitions);
+                const bodyParam = parameters.find(
+                  (p) => p.in === "body" && p.schema?.$ref
+                );
 
-                if (!schema)
+                if (!bodyParam) {
                   return (
                     <Typography>No schema found for request body.</Typography>
                   );
+                }
+                const schema = bodyParam.schema;
 
-                const exampleJson = generateExampleJson(schema.fields);
+                if (!schema) {
+                  return (
+                    <Typography>No schema found for request body.</Typography>
+                  );
+                }
+                
+                const ref = schema.$ref;
+                const schemaFields = getSchemaFields(ref, definitions);
 
-                return schema.fields.length > 0 ? (
+                if (!schemaFields) {
+                  return (
+                    <Typography>No schema found for request body.</Typography>
+                  );
+                }
+
+                const exampleJson = generateExampleJson(schemaFields.fields);
+
+                return schemaFields.fields.length > 0 ? (
                   <Box
                     display="flex"
                     flexDirection={{ xs: "column", sm: "row" }}
@@ -143,7 +158,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                     {/* Left side - field descriptions */}
                     <Box flex={1}>
                       <List dense>
-                        {schema.fields.map((field: Field, idx: number) => (
+                        {schemaFields.fields.map((field: Field, idx: number) => (
                           <ListItem key={idx}>
                             <ListItemText
                               primary={

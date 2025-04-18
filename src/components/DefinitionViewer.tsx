@@ -6,7 +6,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { Field, generateExampleJson } from "../functions/groupPaths";
+import { generateExampleJson } from "../functions/groupPaths";
 
 const convertPropertiesToFields = (
   properties: Record<string, any>
@@ -36,11 +36,9 @@ const convertPropertiesToFields = (
 };
 
 export default function DefinitionViewer({
-  title,
   description,
   schema,
 }: {
-  title: string;
   description?: string;
   schema: {
     type: string;

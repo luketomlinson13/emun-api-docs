@@ -36,11 +36,13 @@ export interface OpenApiSpec {
   
   export interface Parameter {
     name: string;
-    type: string;
     in: string;
     required?: boolean;
-    schema: SchemaRef;
+    type?: string;
+    format?: string;
+    schema?: SchemaRef; 
   }
+  
   
   export interface Response {
     description: string;

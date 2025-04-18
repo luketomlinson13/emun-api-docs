@@ -193,7 +193,6 @@ export function Layout() {
 
             {"type" in selectedContent && selectedContent.type === "object" ? (
               <DefinitionViewer
-                title={selectedChildLabel}
                 description={selectedContent.description}
                 schema={selectedContent}
               />
