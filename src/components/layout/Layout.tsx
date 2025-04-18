@@ -19,6 +19,7 @@ import { groupPaths } from "../../functions/groupPaths";
 import ApiExplorer from "../../pages/APIExplorer";
 import DefinitionViewer from "../DefinitionViewer";
 import DefaultContent from "../../pages/DefaultContent";
+import ApiLinks from "../ApiLinks";
 
 const drawerWidth = 280;
 
@@ -176,6 +177,9 @@ export function Layout() {
               </Collapse>
             </Box>
           </List>
+
+          <ApiLinks />
+
         </Box>
       </Drawer>
 
