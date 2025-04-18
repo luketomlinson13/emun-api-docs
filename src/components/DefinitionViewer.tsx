@@ -7,7 +7,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { generateExampleJson } from "../functions/groupPaths";
+import { generateExampleJson } from "../functions/generateExampleJson";
 
 const convertPropertiesToFields = (
   properties: Record<string, any>

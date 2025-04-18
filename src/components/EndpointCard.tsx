@@ -14,11 +14,6 @@ import {
 import { Parameter, Schema } from "../interfaces/openApiInterfaces";
 import { Response } from "../interfaces/openApiInterfaces";
 import CustomAccordion from "./CustomAccordion";
-import {
-  Field,
-  generateExampleJson,
-  getSchemaFields,
-} from "../functions/groupPaths";
 import SchemaIcon from "@mui/icons-material/Schema";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import HttpIcon from "@mui/icons-material/Http";
@@ -26,6 +21,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import { colorMap } from "../functions/colorMap";
 import { RequestTypes } from "../interfaces/RequestTypes";
 import CopyButton from "./CopyButton";
+import { Field, generateExampleJson, getSchemaFields } from "../functions/generateExampleJson";
 
 interface EndpointCardProps {
   method: RequestTypes;
@@ -103,7 +99,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
             {buildPathWithQueryParams()}
           </Typography>
           {!!Object.entries(queryParams).length && (
-            <CopyButton getTextToCopy={buildPathWithQueryParams} />
+            <CopyButton textToCopy={buildPathWithQueryParams} />
           )}
         </Box>
         <Typography variant="caption" color="textSecondary" paragraph>
@@ -175,9 +171,12 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
 
                     {/* Right side - JSON Example */}
                     <Box flex={1}>
-                      <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                        Example JSON
-                      </Typography>
+                      <Box display="flex" flexGrow={1} justifyContent="space-between" alignItems="center">
+                          <Typography variant="h6">
+                            Example JSON
+                          </Typography>
+                          <CopyButton textToCopy={JSON.stringify(exampleJson)} />
+                      </Box>
                       <pre
                         style={{
                           backgroundColor: "black",
@@ -343,9 +342,12 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
 
                     {/* Right side - JSON Example */}
                     <Box flex={1}>
-                      <Typography variant="h6" gutterBottom>
-                        Example JSON
-                      </Typography>
+                      <Box display="flex" flexGrow={1} justifyContent="space-between" alignItems="center">
+                        <Typography variant="h6">
+                          Example JSON
+                        </Typography>
+                        <CopyButton textToCopy={JSON.stringify(exampleJson)} />
+                      </Box>
                       <Divider sx={{ mb: 2 }} />
                       <pre
                         style={{
