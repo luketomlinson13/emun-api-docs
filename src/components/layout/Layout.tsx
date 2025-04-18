@@ -10,13 +10,15 @@ import {
   ListItemText,
   ListItemIcon,
   Collapse,
+  ListSubheader,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useState } from "react";
 import spec from "../../data/openapi_agency_api_dev.json";
 import { groupPaths } from "../../functions/groupPaths";
-import ApiExplorer from "../APIExplorer";
+import ApiExplorer from "../../pages/APIExplorer";
 import DefinitionViewer from "../DefinitionViewer";
+import DefaultContent from "../../pages/DefaultContent";
 
 const drawerWidth = 280;
 
@@ -29,9 +31,6 @@ export function Layout() {
       children: value, // <-- normalized to 'children' for consistent access
     })),
   };
-
-  // Include it in the groups list
-  const groups = [...pathsGroup, definitionsGroup];
 
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [selectedChildLabel, setSelectedChildLabel] = useState<string | null>(
@@ -60,12 +59,12 @@ export function Layout() {
       >
         <Toolbar>
           <img
-            src="https://mui.com/static/logo.png"
-            alt="Logo"
-            style={{ height: 32, marginRight: 16 }}
+            src="/emunlogo.svg"
+            alt="API Logo"
+            style={{ height: 25, marginRight: 16 }}
           />
           <Typography variant="h6" noWrap component="div">
-            Emun API Docs
+            API Docs
           </Typography>
         </Toolbar>
       </AppBar>
@@ -83,8 +82,10 @@ export function Layout() {
       >
         <Toolbar />
         <Box sx={{ overflow: "auto", p: 2 }}>
-          <List>
-            {groups.map((group) => {
+          <List
+            subheader={<ListSubheader component="div">Endpoints</ListSubheader>}
+          >
+            {pathsGroup.map((group) => {
               const isExpanded = expandedGroup === group.label;
               return (
                 <Box key={group.label}>
@@ -104,7 +105,7 @@ export function Layout() {
 
                   <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      {group.children?.map((child) => (
+                      {group.children.map((child) => (
                         <ListItemButton
                           key={child.label}
                           sx={{ pl: 4 }}
@@ -121,6 +122,59 @@ export function Layout() {
                 </Box>
               );
             })}
+          </List>
+
+          <List
+            subheader={
+              <ListSubheader component="div" sx={{ mt: 2 }}>
+                Objects
+              </ListSubheader>
+            }
+          >
+            <Box key={definitionsGroup.label}>
+              <ListItemButton
+                onClick={() => handleGroupToggle(definitionsGroup.label)}
+              >
+                <ListItemText
+                  primary={definitionsGroup.label}
+                  primaryTypographyProps={{
+                    fontWeight:
+                      expandedGroup === definitionsGroup.label
+                        ? "bold"
+                        : "normal",
+                  }}
+                />
+                <ListItemIcon sx={{ minWidth: 0 }}>
+                  {expandedGroup === definitionsGroup.label ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )}
+                </ListItemIcon>
+              </ListItemButton>
+
+              <Collapse
+                in={expandedGroup === definitionsGroup.label}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {definitionsGroup.children.map((child) => (
+                    <ListItemButton
+                      key={child.label}
+                      sx={{ pl: 4 }}
+                      selected={selectedChildLabel === child.label}
+                      color="red"
+                      onClick={() =>
+                        handleChildClick(child.label, child.children)
+                      }
+                    >
+                      <ListItemText primary={child.label} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </Box>
           </List>
         </Box>
       </Drawer>
@@ -144,9 +198,7 @@ export function Layout() {
             )}
           </>
         ) : (
-          <Typography variant="h6" color="text.secondary">
-            Select an endpoint from the sidebar to get started.
-          </Typography>
+          <DefaultContent></DefaultContent>
         )}
       </Box>
     </Box>

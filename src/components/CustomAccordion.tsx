@@ -52,7 +52,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
             </Box>
           )}
           <Typography
-            variant="h6"
+            variant="body2"
             sx={{ fontWeight: "bold", textTransform: "uppercase" }}
           >
             {title}

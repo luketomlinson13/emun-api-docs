@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Box, TextField, Chip, Button } from "@mui/material";
 import spec from "../data/openapi_agency_api.json";
-import EndpointCard from "./EndpointCard";
+import EndpointCard from "../components/EndpointCard";
 
 type ApiExplorerProps = {
   paths: Record<string, any>;
