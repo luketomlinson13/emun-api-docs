@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   CssBaseline,
@@ -43,7 +44,7 @@ export function Layout() {
     setExpandedGroup((prev) => (prev === label ? null : label));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   // Accept either a path group or a definition schema as 'children'
   const handleChildClick = (label: string, content: any) => {
     setSelectedChildLabel(label);

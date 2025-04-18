@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Box, TextField, Chip, Button } from "@mui/material";
 import spec from "../data/openapi_agency_api.json";
 import EndpointCard from "../components/EndpointCard";
+import { colorMap } from "../functions/colorMap";
+import { RequestTypes } from "../interfaces/RequestTypes";
 
 type ApiExplorerProps = {
   paths: Record<string, any>;
@@ -25,13 +27,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
 
   const handleExpandAll = () => setExpandAll(true);
   const handleCollapseAll = () => setExpandAll(false);
-
-  const methodColors: Record<string, "primary" | "success" | "warning" | "error"> = {
-    get: "primary",
-    post: "success",
-    put: "warning",
-    delete: "error",
-  };
 
   return (
     <div className="p-6">
@@ -55,7 +50,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
             <Chip
               key={method}
               label={method.toUpperCase()}
-              color={methodColors[method]}
+              color={colorMap[method]}
               variant={methodFilter.includes(method) ? "filled" : "outlined"}
               onClick={() => handleMethodChipClick(method)}
               sx={{
@@ -88,13 +83,12 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
             
-            console.log(operation.responses);
             if (!matchesMethod || !matchesSearch) return null;
             
             return (
               <EndpointCard
-                key={operation.operationId} // ✅ unique key
-                method={method as "get" | "post" | "put" | "delete"}
+                key={operation.operationId} 
+                method={method as RequestTypes}
                 path={path}
                 summary={operation.summary}
                 description={operation.description}

@@ -23,9 +23,12 @@ import SchemaIcon from "@mui/icons-material/Schema";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import HttpIcon from "@mui/icons-material/Http";
 import TuneIcon from "@mui/icons-material/Tune";
+import { colorMap } from "../functions/colorMap";
+import { RequestTypes } from "../interfaces/RequestTypes";
+import CopyButton from "./CopyButton";
 
 interface EndpointCardProps {
-  method: "get" | "post" | "put" | "delete";
+  method: RequestTypes;
   path: string;
   summary: string;
   description: string;
@@ -47,13 +50,6 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
   definitions,
   forceExpand,
 }) => {
-  const colorMap: Record<string, string> = {
-    get: "primary",
-    post: "success",
-    put: "warning",
-    delete: "error",
-  };
-
   const [queryParams, setQueryParams] = useState<Record<string, string>>({});
   const [expanded, setExpanded] = useState(forceExpand ?? false);
 
@@ -73,7 +69,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
   const buildPathWithQueryParams = () => {
     let newPath = path;
     const queryStrings = Object.entries(queryParams)
-      .filter(([_, value]) => value !== "") // Skip empty values
+      .filter(([, value]) => value !== "") // Skip empty values
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
       .join("&");
 
@@ -91,7 +87,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
         <Box display="flex" alignItems="center" gap={2} paddingBottom={2}>
           <Chip
             label={method.toUpperCase()}
-            color={colorMap[method] as any}
+            color={colorMap[method]}
             sx={{
               fontSize: "0.75rem",
               fontWeight: "bold",
@@ -106,6 +102,9 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
           >
             {buildPathWithQueryParams()}
           </Typography>
+          {!!Object.entries(queryParams).length && (
+            <CopyButton getTextToCopy={buildPathWithQueryParams} />
+          )}
         </Box>
         <Typography variant="caption" color="textSecondary" paragraph>
           {description}
