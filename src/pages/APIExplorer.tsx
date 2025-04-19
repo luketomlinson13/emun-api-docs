@@ -95,7 +95,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
                 parameters={operation.parameters}
                 responses={operation.responses}
                 tag={operation.tags?.[0] || tag}
-                howItWorks="This is an expanded detail where we can add specific information for how to use this particular endpoint."
                 definitions={definitions}
                 forceExpand={expandAll}
               />

@@ -22,16 +22,16 @@ import { colorMap } from "../functions/colorMap";
 import { RequestTypes } from "../interfaces/RequestTypes";
 import CopyButton from "./CopyButton";
 import { Field, generateExampleJson, getSchemaFields } from "../functions/generateExampleJson";
+import ReactMarkdown from "react-markdown";
 
 interface EndpointCardProps {
   method: RequestTypes;
   path: string;
   summary: string;
-  description: string;
+  description: string; // What goes in the How It Works Section
   parameters?: Parameter[];
   responses?: Response[];
   tag?: string;
-  howItWorks?: string; // this is for us Ty if we ever add any additional detail
   definitions: Record<string, Schema>;
   forceExpand?: boolean | null;
 }
@@ -39,10 +39,10 @@ interface EndpointCardProps {
 const EndpointCard: React.FC<EndpointCardProps> = ({
   method,
   path,
+  summary,
   description,
   parameters,
   responses,
-  howItWorks,
   definitions,
   forceExpand,
 }) => {
@@ -103,7 +103,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
           )}
         </Box>
         <Typography variant="caption" color="textSecondary" paragraph>
-          {description}
+          {summary}
         </Typography>
 
         {parameters &&
@@ -375,15 +375,30 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
         )}
 
         {/* Accordion for "How It Works" section */}
-        {howItWorks && (
+        {description && (
           <CustomAccordion
             title="How It Works"
             icon={<HelpOutlineIcon />}
             expandAll={expanded}
           >
-            <Typography variant="body2" paragraph>
-              {howItWorks}
-            </Typography>
+           <ReactMarkdown
+              // We have some customization options based on the markdown tag if we want like this, but it comes with out of the box styles that look fine
+              // components={{
+              //   p: ({ children }) => (
+              //     <Typography variant="body2" color="textSecondary" paragraph>
+              //       {children}
+              //     </Typography>
+              //   ),
+              //   code: ({ children }) => (
+              //     <code style={{ backgroundColor: "#f5f5f5", padding: "0.2em 0.4em", borderRadius: "4px" }}>
+              //       {children}
+              //     </code>
+              //   ),
+              
+              // }}
+            >
+              {description}
+            </ReactMarkdown>
           </CustomAccordion>
         )}
       </CardContent>
