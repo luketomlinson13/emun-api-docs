@@ -18,10 +18,10 @@
   "paths": {
     "/PurgeProductKitComponents": {
       "post": {
-        "parent": "Products",
-        "subParent": "Kit Component",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Kit Component"
         ],
         "summary": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
@@ -59,10 +59,10 @@
     },
     "/PurgeProducts": {
       "post": {
-        "parent": "Products",
-        "subParent": "Products",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Products"
         ],
         "summary": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
@@ -100,10 +100,10 @@
     },
     "/PurgeProductTags": {
       "post": {
-        "parent": "Products",
-        "subParent": "Product Tag",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Product Tag"
         ],
         "summary": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
@@ -141,10 +141,10 @@
     },
     "/PurgeVendorResources": {
       "post": {
-        "parent": "Vendors",
-        "subParent": "Vendor Resources",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Vendors",
+          "SubParent:Vendor Resources"
         ],
         "summary": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
@@ -182,10 +182,10 @@
     },
     "/GetOrders": {
       "get": {
-        "parent": "Orders",
-        "subParent": "Orders",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Orders",
+          "SubParent:Orders"
         ],
         "summary": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
         "description": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
@@ -268,10 +268,10 @@
     },
     "/SaveKitComponent": {
       "post": {
-        "parent": "Products",
-        "subParent": "Kit Component",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Kit Component"
         ],
         "summary": "Write a KitComponent record",
         "description": "Write a KitComponent record",
@@ -347,10 +347,10 @@
     },
     "/SaveProduct": {
       "post": {
-        "parent": "Products",
-        "subParent": "Products",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Products"
         ],
         "summary": "Write a Product record",
         "description": "Write a Product record",
@@ -603,10 +603,10 @@
     },
     "/SaveProductTag": {
       "post": {
-        "parent": "Products",
-        "subParent": "Product Tag",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Product Tag"
         ],
         "summary": "Write a ProductTag record",
         "description": "Write a ProductTag record",
@@ -685,10 +685,10 @@
     },
     "/SaveKitComponent/{Id}": {
       "put": {
-        "parent": "Products",
-        "subParent": "Kit Component",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Kit Component"
         ],
         "summary": "Write a KitComponent record",
         "description": "Write a KitComponent record",
@@ -765,10 +765,10 @@
     },
     "/UpdateOrderDownloaded/{OrderNumber}": {
       "put": {
-        "parent": "Orders",
-        "subParent": "Order Downloaded",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Orders",
+          "SubParent:Order Downloaded"
         ],
         "summary": "Write a OrderDownloaded record",
         "description": "Write a OrderDownloaded record",
@@ -823,10 +823,10 @@
     },
     "/SaveProduct/{ProductId}": {
       "put": {
-        "parent": "Products",
-        "subParent": "Products",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Products"
         ],
         "summary": "Write a Product record",
         "description": "Write a Product record",
@@ -1080,10 +1080,10 @@
     },
     "/SaveProductTag/{Id}": {
       "put": {
-        "parent": "Products",
-        "subParent": "Product Tag",
         "tags": [
-          "EMUN1-Agency-API"
+          "EMUN1-Agency-API",
+          "Parent:Products",
+          "SubParent:Product Tag"
         ],
         "summary": "Write a ProductTag record",
         "description": "Write a ProductTag record",

@@ -20,8 +20,6 @@ export interface OpenApiSpec {
   }
   
   export interface Operation {
-    parent: string;
-    subParent: string;
     tags: string[];
     summary: string;
     description: string;

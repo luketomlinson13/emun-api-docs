@@ -21,6 +21,9 @@ import ApiExplorer from "../../pages/APIExplorer";
 import DefinitionViewer from "../DefinitionViewer";
 import DefaultContent from "../../pages/DefaultContent";
 import ApiLinks from "../ApiLinks";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+
 
 const drawerWidth = 280;
 
@@ -39,17 +42,45 @@ export function Layout() {
     null
   );
   const [selectedContent, setSelectedContent] = useState<any>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle initial load from URL query params
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const group = params.get("group");
+    const child = params.get("child");
+
+    if (group && child) {
+      // Expand the group
+      setExpandedGroup(group);
+      setSelectedChildLabel(child);
+
+      // Lookup the corresponding content
+      const groupContent =
+        group === "Definitions"
+          ? definitionsGroup.children.find((c) => c.label === child)
+          : pathsGroup.find((g) => g.label === group)?.children.find((c) => c.label === child);
+
+      if (groupContent) {
+        setSelectedContent(groupContent.children);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
 
   const handleGroupToggle = (label: string) => {
     setExpandedGroup((prev) => (prev === label ? null : label));
   };
 
    
-  // Accept either a path group or a definition schema as 'children'
-  const handleChildClick = (label: string, content: any) => {
+  const handleChildClick = (label: string, content: any, groupLabel: string) => {
     setSelectedChildLabel(label);
     setSelectedContent(content);
+    navigate(`?group=${encodeURIComponent(groupLabel)}&child=${encodeURIComponent(label)}`);
   };
+  
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -113,8 +144,8 @@ export function Layout() {
                           sx={{ pl: 4 }}
                           selected={selectedChildLabel === child.label}
                           onClick={() =>
-                            handleChildClick(child.label, child.children)
-                          }
+                            handleChildClick(child.label, child.children, group.label)
+                          }                          
                         >
                           <ListItemText primary={child.label} />
                         </ListItemButton>
@@ -168,8 +199,8 @@ export function Layout() {
                       selected={selectedChildLabel === child.label}
                       color="red"
                       onClick={() =>
-                        handleChildClick(child.label, child.children)
-                      }
+                        handleChildClick(child.label, child.children, definitionsGroup.label)
+                      }                      
                     >
                       <ListItemText primary={child.label} />
                     </ListItemButton>

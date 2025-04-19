@@ -19,10 +19,15 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
 
   Object.entries(spec.paths).forEach(([path, pathItem]) => {
     Object.entries(pathItem).forEach(([method, operation]) => {
-      if (!operation.parent || !operation.subParent) return;
+      const tags = operation.tags || [];
 
-      const parent = operation.parent;
-      const subParent = operation.subParent;
+      const parentTag = tags.find(tag => tag.startsWith("Parent:"));
+      const subParentTag = tags.find(tag => tag.startsWith("SubParent:"));
+
+      if (!parentTag || !subParentTag) return;
+
+      const parent = parentTag.replace("Parent:", "").trim();
+      const subParent = subParentTag.replace("SubParent:", "").trim();
 
       if (!grouped[parent]) {
         grouped[parent] = {};
