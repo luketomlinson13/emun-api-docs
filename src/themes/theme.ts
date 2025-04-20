@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material';
 
-export const theme = createTheme({
+export const theme = (darkMode: boolean) => createTheme({
   palette: {
-    mode: 'dark', 
+    mode: darkMode ? 'dark' : 'light', 
   },
   breakpoints: {
     values: {

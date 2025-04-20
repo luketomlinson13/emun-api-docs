@@ -8,6 +8,7 @@ import {
   Divider,
 } from "@mui/material";
 import { generateExampleJson } from "../functions/generateExampleJson";
+import { JsonBlock } from "./JsonBlock";
 
 const convertPropertiesToFields = (
   properties: Record<string, any>
@@ -93,27 +94,7 @@ export default function DefinitionViewer({
         </Box>
 
         {/* Right - Example JSON */}
-        <Box flex={1}>
-          <Typography variant="h6" gutterBottom>
-            Example JSON
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Box
-            component="pre"
-            sx={{
-              backgroundColor: "black",
-              color: "lime",
-              padding: 2,
-              borderRadius: 2,
-              overflowX: "auto",
-              fontFamily: "monospace",
-              fontSize: "0.9rem",
-              whiteSpace: "pre-wrap",
-            }}
-          >
-            {JSON.stringify(exampleJson, null, 2)}
-          </Box>
-        </Box>
+        <JsonBlock json={exampleJson} />
       </Box>
     </Box>
   );

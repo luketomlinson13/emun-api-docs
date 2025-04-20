@@ -23,6 +23,7 @@ import { RequestTypes } from "../interfaces/RequestTypes";
 import CopyButton from "./CopyButton";
 import { Field, generateExampleJson, getSchemaFields } from "../functions/generateExampleJson";
 import ReactMarkdown from "react-markdown";
+import { JsonBlock } from "./JsonBlock";
 
 interface EndpointCardProps {
   method: RequestTypes;
@@ -170,27 +171,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                     </Box>
 
                     {/* Right side - JSON Example */}
-                    <Box flex={1}>
-                      <Box display="flex" flexGrow={1} justifyContent="space-between" alignItems="center">
-                          <Typography variant="h6">
-                            Example JSON
-                          </Typography>
-                          <CopyButton textToCopy={JSON.stringify(exampleJson)} />
-                      </Box>
-                      <pre
-                        style={{
-                          backgroundColor: "black",
-                          color: "lime",
-                          padding: "1em",
-                          borderRadius: "8px",
-                          overflowX: "auto",
-                          fontFamily: "monospace",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {JSON.stringify(exampleJson, null, 2)}
-                      </pre>
-                    </Box>
+                    <JsonBlock json={exampleJson} />
                   </Box>
                 ) : (
                   <Typography variant="body2" color="textSecondary">
@@ -341,28 +322,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({
                     </Box>
 
                     {/* Right side - JSON Example */}
-                    <Box flex={1}>
-                      <Box display="flex" flexGrow={1} justifyContent="space-between" alignItems="center">
-                        <Typography variant="h6">
-                          Example JSON
-                        </Typography>
-                        <CopyButton textToCopy={JSON.stringify(exampleJson)} />
-                      </Box>
-                      <Divider sx={{ mb: 2 }} />
-                      <pre
-                        style={{
-                          backgroundColor: "black",
-                          color: "lime",
-                          padding: "1em",
-                          borderRadius: "8px",
-                          overflowX: "auto",
-                          fontFamily: "monospace",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {JSON.stringify(exampleJson, null, 2)}
-                      </pre>
-                    </Box>
+                    <JsonBlock json={exampleJson} />
                   </Box>
                 ) : (
                   <Typography variant="body2" color="textSecondary">
