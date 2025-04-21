@@ -66,7 +66,7 @@ export default function DefinitionViewer({
       >
         {/* Left - field descriptions */}
         <Box flex={1}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" >
             Properties
           </Typography>
           <Divider sx={{ mb: 2 }} />
