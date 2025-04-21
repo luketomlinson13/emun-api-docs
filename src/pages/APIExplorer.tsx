@@ -1,6 +1,6 @@
  
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, TextField, Chip, Button, Autocomplete } from "@mui/material";
 import spec from "../data/openapi_agency_api.json";
 import EndpointCard from "../components/EndpointCard";
@@ -18,6 +18,11 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [methodFilter, setMethodFilter] = useState<string[]>([]);
   const [expandAll, setExpandAll] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setSearchTerm("");
+    setMethodFilter([])
+  }, [paths])
 
   const handleMethodChipClick = (method: string) => {
     setMethodFilter((prev) =>
