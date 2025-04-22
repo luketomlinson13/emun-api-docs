@@ -13,4 +13,14 @@ export const theme = (darkMode: boolean) => createTheme({
       xl: 1920,
     },
   },
+  components: {
+    MuiListSubheader: {
+      styleOverrides: {
+        root: {
+          marginLeft: -8,
+          textTransform: 'uppercase'
+        }
+      }
+    }
+  }
 });

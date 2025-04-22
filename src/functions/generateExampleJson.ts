@@ -35,8 +35,6 @@ export const getSchemaFields = (
       let type = prop.type || "any";
       let nestedFields: Field[] | undefined;
 
-      if (type === "List<OrderLine>") console.log()
-
       // Case 1: Direct $ref
       if (prop.$ref && depth > 0) {
         const nested = getSchemaFields(prop.$ref, definitions, depth - 1);

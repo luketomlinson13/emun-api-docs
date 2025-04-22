@@ -144,9 +144,10 @@ export function Layout() {
                   <ListItemButton onClick={() => handleGroupToggle(group.label)}>
                     <ListItemText
                       primary={group.label}
-                      primaryTypographyProps={{
-                        fontWeight: isExpanded ? "bold" : "normal",
-                      }}
+                      slotProps={{ 
+                        primary: {
+                          fontWeight: expandedGroup === definitionsGroup.label ? "bold" : "normal",
+                      }}}
                     />
                     <ListItemIcon sx={{ minWidth: 0 }}>
                       {isExpanded ? <ExpandLess /> : <ExpandMore />}
@@ -181,9 +182,10 @@ export function Layout() {
               <ListItemButton onClick={() => handleGroupToggle(definitionsGroup.label)}>
                 <ListItemText
                   primary={definitionsGroup.label}
-                  primaryTypographyProps={{
-                    fontWeight: expandedGroup === definitionsGroup.label ? "bold" : "normal",
-                  }}
+                  slotProps={{ 
+                    primary: {
+                      fontWeight: expandedGroup === definitionsGroup.label ? "bold" : "normal",
+                  }}}
                 />
                 <ListItemIcon sx={{ minWidth: 0 }}>
                   {expandedGroup === definitionsGroup.label ? <ExpandLess /> : <ExpandMore />}
