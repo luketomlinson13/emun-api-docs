@@ -35,7 +35,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
 
   return (
     <Accordion expanded={expanded} onChange={toggleExpanded}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ fontSize: 14 }} />}>
         <Box display="flex" alignItems="center" gap={1}>
           {icon && (
             <Box
