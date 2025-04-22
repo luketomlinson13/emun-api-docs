@@ -6,32 +6,18 @@
   },
   "host": "emun1-agency-sandbox.ws.emuncloud.com",
   "basePath": "/",
-  "schemes": [
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/PurgeProductKitComponents": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Kit Component"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Kit Component"],
         "summary": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProductKitComponents_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -59,20 +45,12 @@
     },
     "/PurgeProducts": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Products"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Products"],
         "summary": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProducts_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -100,20 +78,12 @@
     },
     "/PurgeProductTags": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Product Tag"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Product Tag"],
         "summary": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProductTags_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -141,20 +111,12 @@
     },
     "/PurgeVendorResources": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Vendors",
-          "SubParent:Vendor Resources"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Vendors", "SubParent:Vendor Resources"],
         "summary": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeVendorResources_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -182,20 +144,12 @@
     },
     "/GetOrders": {
       "get": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Orders",
-          "SubParent:Orders"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Orders", "SubParent:Orders"],
         "summary": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
         "description": "The `GetOrders` API will only return confirmed orders. You can use the `Take` parameter to limit the number of orders returned. The `EMUN1` API will not return more than **250 orders** in a single call. If there are more orders, you will need to call it again after processing the first 250. The API returns a `total` field indicating the number of orders matching the query parameters provided.\n\n---\n\n### Sample Executions\n\n#### Retrieve Orders with OrderDate Exceeding a Specified Date\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderDateGreaterThan=2025-01-01\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders Not Marked as Downloaded\n\nIf you are posting a successful download back to EMUN, this query parameter can be utilized to retrieve new orders.\n\n```http\nGET {api url}/GetOrders.json?Take=20&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders with Higher Sequence Numbers\n\nOrder numbers in EMUN can be alphanumeric, but their numeric portions are always incremented. Input your latest sequence number to get orders with greater sequence numbers.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Combining Parameters\n\nYou can combine several parameters by adding them to the query string. This example retrieves the first 20 records where the order sequence is greater than the input value and the order has not been downloaded.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```",
         "operationId": "QueryOrders_Get",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Search",
@@ -268,20 +222,12 @@
     },
     "/SaveKitComponent": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Kit Component"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Kit Component"],
         "summary": "Write a KitComponent record",
         "description": "Write a KitComponent record",
         "operationId": "SaveKitComponent_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -347,20 +293,12 @@
     },
     "/SaveProduct": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Products"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Products"],
         "summary": "Write a Product record",
         "description": "Write a Product record",
         "operationId": "SaveProduct_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "ProductId",
@@ -603,20 +541,12 @@
     },
     "/SaveProductTag": {
       "post": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Product Tag"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Product Tag"],
         "summary": "Write a ProductTag record",
         "description": "Write a ProductTag record",
         "operationId": "SaveProductTag_Post",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -685,20 +615,12 @@
     },
     "/SaveKitComponent/{Id}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Kit Component"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Kit Component"],
         "summary": "Write a KitComponent record",
         "description": "Write a KitComponent record",
         "operationId": "UpdateKitComponentId_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -765,20 +687,12 @@
     },
     "/UpdateOrderDownloaded/{OrderNumber}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Orders",
-          "SubParent:Order Downloaded"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Orders", "SubParent:Order Downloaded"],
         "summary": "Write a OrderDownloaded record",
         "description": "Write a OrderDownloaded record",
         "operationId": "UpdateOrderDownloadedOrderNumber_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "OrderNumber",
@@ -823,20 +737,12 @@
     },
     "/SaveProduct/{ProductId}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Products"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Products"],
         "summary": "Write a Product record",
         "description": "Write a Product record",
         "operationId": "UpdateProductProductId_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "ProductId",
@@ -1080,20 +986,12 @@
     },
     "/SaveProductTag/{Id}": {
       "put": {
-        "tags": [
-          "EMUN1-Agency-API",
-          "Parent:Products",
-          "SubParent:Product Tag"
-        ],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Product Tag"],
         "summary": "Write a ProductTag record",
         "description": "Write a ProductTag record",
         "operationId": "UpdateProductTagId_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Id",
@@ -2138,9 +2036,7 @@
       "description": "Accept Header",
       "type": "string",
       "required": true,
-      "enum": [
-        "application/json"
-      ]
+      "enum": ["application/json"]
     }
   },
   "securityDefinitions": {

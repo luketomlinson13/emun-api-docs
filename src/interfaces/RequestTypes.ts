@@ -1,1 +1,1 @@
-export type RequestTypes = "get" | "post" | "put" | "delete";
+export type RequestTypes = 'get' | 'post' | 'put' | 'delete';

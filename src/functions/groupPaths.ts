@@ -1,4 +1,4 @@
-import { Operation, OpenApiSpec } from "../interfaces/openApiInterfaces";
+import { Operation, OpenApiSpec } from '../interfaces/openApiInterfaces';
 
 interface PathMeta {
   path: string;
@@ -21,13 +21,13 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
     Object.entries(pathItem).forEach(([method, operation]) => {
       const tags = operation.tags || [];
 
-      const parentTag = tags.find(tag => tag.startsWith("Parent:"));
-      const subParentTag = tags.find(tag => tag.startsWith("SubParent:"));
+      const parentTag = tags.find((tag) => tag.startsWith('Parent:'));
+      const subParentTag = tags.find((tag) => tag.startsWith('SubParent:'));
 
       if (!parentTag || !subParentTag) return;
 
-      const parent = parentTag.replace("Parent:", "").trim();
-      const subParent = subParentTag.replace("SubParent:", "").trim();
+      const parent = parentTag.replace('Parent:', '').trim();
+      const subParent = subParentTag.replace('SubParent:', '').trim();
 
       if (!grouped[parent]) {
         grouped[parent] = {};
@@ -45,15 +45,13 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
     });
   });
 
-  const navigation: NavigationItem[] = Object.entries(grouped).map(
-    ([parentLabel, subParents]) => ({
-      label: parentLabel,
-      children: Object.entries(subParents).map(([subParentLabel, items]) => ({
-        label: subParentLabel,
-        children: items,
-      })),
-    })
-  );
+  const navigation: NavigationItem[] = Object.entries(grouped).map(([parentLabel, subParents]) => ({
+    label: parentLabel,
+    children: Object.entries(subParents).map(([subParentLabel, items]) => ({
+      label: subParentLabel,
+      children: items,
+    })),
+  }));
 
   return navigation;
 }

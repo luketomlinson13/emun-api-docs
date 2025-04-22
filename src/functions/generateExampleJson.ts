@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 type SchemaProperty = {
   type?: string;
   description?: string;
@@ -23,7 +22,7 @@ export const getSchemaFields = (
   definitions: Record<string, any>,
   depth: number = 3
 ): { description: string; fields: Field[] } | null => {
-  const refName = ref.replace("#/definitions/", "");
+  const refName = ref.replace('#/definitions/', '');
   const schema = definitions[refName];
   if (!schema) return null;
   const fields: Field[] = [];
@@ -32,33 +31,33 @@ export const getSchemaFields = (
     for (const [name, propRaw] of Object.entries(schema.properties)) {
       const prop = propRaw as SchemaProperty;
 
-      let type = prop.type || "any";
+      let type = prop.type || 'any';
       let nestedFields: Field[] | undefined;
 
       // Case 1: Direct $ref
       if (prop.$ref && depth > 0) {
         const nested = getSchemaFields(prop.$ref, definitions, depth - 1);
-        type = prop.$ref.replace("#/definitions/", "");
+        type = prop.$ref.replace('#/definitions/', '');
         if (nested) nestedFields = nested.fields;
 
         // Case 2: Array of $ref
-      } else if ((prop.type === "array" || prop.type?.includes("List<")) && prop.items?.$ref && depth > 0) {
+      } else if ((prop.type === 'array' || prop.type?.includes('List<')) && prop.items?.$ref && depth > 0) {
         const nested = getSchemaFields(prop.items.$ref, definitions, depth - 1);
-        type = `array of ${prop.items.$ref.replace("#/definitions/", "")}`;
+        type = `array of ${prop.items.$ref.replace('#/definitions/', '')}`;
         if (nested) nestedFields = nested.fields;
       }
 
       fields.push({
         name,
         type,
-        description: prop.description || "",
+        description: prop.description || '',
         nestedFields,
       });
     }
   }
 
   return {
-    description: schema.description || "",
+    description: schema.description || '',
     fields,
   };
 };
@@ -72,11 +71,11 @@ export const generateExampleJson = (
         acc[field.name] = generateExampleJson(field.nestedFields);
       } else {
         acc[field.name] =
-          field.type === "string"
-            ? "string"
-            : field.type === "number"
+          field.type === 'string'
+            ? 'string'
+            : field.type === 'number'
               ? 0
-              : field.type === "boolean"
+              : field.type === 'boolean'
                 ? true
                 : field.type;
       }
