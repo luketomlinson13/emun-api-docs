@@ -47,17 +47,23 @@ export function Layout() {
       // If dev then grab json locally or from vite proxy server (to bypass CORS issue)
       if (import.meta.env.DEV) {
         // Uncomment whichever way you wanna grab the JSON. Local for testing changes to the JSON and then the proxy server for production like functionality.
-        // Fetch the json locally 
+        // Fetch the json locally
         data = await import("../../data/openapi_agency_api_dev.json");
 
         // Fetch the json from vite proxy server
         // const res = await fetch("/api/agency/openapi_agency_api.json")        ;
         // data = await res.json();
-
-      } 
+      }
       // Else production then grab the from the url
       else {
-        const res = await fetch("https://emunvendors.ws.emuncloud.com/api/agency/openapi_agency_api.json");
+        data = await import("../../data/openapi_agency_api_dev.json");
+
+        return;
+
+        // Check with Sy if we can resolve CORS issue
+        const res = await fetch(
+          "https://emunvendors.ws.emuncloud.com/api/agency/openapi_agency_api.json"
+        );
         data = await res.json();
       }
 
@@ -89,8 +95,12 @@ export function Layout() {
 
       const groupContent =
         group === "Definitions"
-          ? definitionsGroup.children.find((c: { label: string; }) => c.label === child)
-          : sidebarPaths.find((g) => g.label === group)?.children.find((c: { label: string; }) => c.label === child);
+          ? definitionsGroup.children.find(
+              (c: { label: string }) => c.label === child
+            )
+          : sidebarPaths
+              .find((g) => g.label === group)
+              ?.children.find((c: { label: string }) => c.label === child);
 
       if (groupContent) {
         setSelectedContent(groupContent.children);
@@ -102,10 +112,16 @@ export function Layout() {
     setExpandedGroup((prev) => (prev === label ? null : label));
   };
 
-  const handleChildClick = (label: string, content: any, groupLabel: string) => {
+  const handleChildClick = (
+    label: string,
+    content: any,
+    groupLabel: string
+  ) => {
     setSelectedChildLabel(label);
     setSelectedContent(content);
-    navigate(`?group=${encodeURIComponent(groupLabel)}&child=${encodeURIComponent(label)}`);
+    navigate(
+      `?group=${encodeURIComponent(groupLabel)}&child=${encodeURIComponent(label)}`
+    );
   };
 
   if (!json) return null;
@@ -114,9 +130,16 @@ export function Layout() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
-          <img src="/emunlogo.svg" alt="API Logo" style={{ height: 25, marginRight: 16 }} />
+          <img
+            src="/emunlogo.svg"
+            alt="API Logo"
+            style={{ height: 25, marginRight: 16 }}
+          />
           <Typography variant="h6" noWrap component="div">
             API Docs
           </Typography>
@@ -136,12 +159,16 @@ export function Layout() {
       >
         <Toolbar />
         <Box sx={{ overflow: "auto", p: 2 }}>
-          <List subheader={<ListSubheader component="div">Endpoints</ListSubheader>}>
+          <List
+            subheader={<ListSubheader component="div">Endpoints</ListSubheader>}
+          >
             {sidebarPaths.map((group) => {
               const isExpanded = expandedGroup === group.label;
               return (
                 <Box key={group.label}>
-                  <ListItemButton onClick={() => handleGroupToggle(group.label)}>
+                  <ListItemButton
+                    onClick={() => handleGroupToggle(group.label)}
+                  >
                     <ListItemText
                       primary={group.label}
                       slotProps={{ 
@@ -156,18 +183,24 @@ export function Layout() {
 
                   <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      {group.children.map((child: { label: string; children: any; }) => (
-                        <ListItemButton
-                          key={child.label}
-                          sx={{ pl: 4 }}
-                          selected={selectedChildLabel === child.label}
-                          onClick={() =>
-                            handleChildClick(child.label, child.children, group.label)
-                          }
-                        >
-                          <ListItemText primary={child.label} />
-                        </ListItemButton>
-                      ))}
+                      {group.children.map(
+                        (child: { label: string; children: any }) => (
+                          <ListItemButton
+                            key={child.label}
+                            sx={{ pl: 4 }}
+                            selected={selectedChildLabel === child.label}
+                            onClick={() =>
+                              handleChildClick(
+                                child.label,
+                                child.children,
+                                group.label
+                              )
+                            }
+                          >
+                            <ListItemText primary={child.label} />
+                          </ListItemButton>
+                        )
+                      )}
                     </List>
                   </Collapse>
                 </Box>
@@ -176,10 +209,16 @@ export function Layout() {
           </List>
 
           <List
-            subheader={<ListSubheader component="div" sx={{ mt: 2 }}>Objects</ListSubheader>}
+            subheader={
+              <ListSubheader component="div" sx={{ mt: 2 }}>
+                Objects
+              </ListSubheader>
+            }
           >
             <Box key={definitionsGroup.label}>
-              <ListItemButton onClick={() => handleGroupToggle(definitionsGroup.label)}>
+              <ListItemButton
+                onClick={() => handleGroupToggle(definitionsGroup.label)}
+              >
                 <ListItemText
                   primary={definitionsGroup.label}
                   slotProps={{ 
@@ -188,24 +227,38 @@ export function Layout() {
                   }}}
                 />
                 <ListItemIcon sx={{ minWidth: 0 }}>
-                  {expandedGroup === definitionsGroup.label ? <ExpandLess /> : <ExpandMore />}
+                  {expandedGroup === definitionsGroup.label ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )}
                 </ListItemIcon>
               </ListItemButton>
 
-              <Collapse in={expandedGroup === definitionsGroup.label} timeout="auto" unmountOnExit>
+              <Collapse
+                in={expandedGroup === definitionsGroup.label}
+                timeout="auto"
+                unmountOnExit
+              >
                 <List component="div" disablePadding>
-                  {definitionsGroup.children.map((child: { label: string; children: any; }) => (
-                    <ListItemButton
-                      key={child.label}
-                      sx={{ pl: 4 }}
-                      selected={selectedChildLabel === child.label}
-                      onClick={() =>
-                        handleChildClick(child.label, child.children, definitionsGroup.label)
-                      }
-                    >
-                      <ListItemText primary={child.label} />
-                    </ListItemButton>
-                  ))}
+                  {definitionsGroup.children.map(
+                    (child: { label: string; children: any }) => (
+                      <ListItemButton
+                        key={child.label}
+                        sx={{ pl: 4 }}
+                        selected={selectedChildLabel === child.label}
+                        onClick={() =>
+                          handleChildClick(
+                            child.label,
+                            child.children,
+                            definitionsGroup.label
+                          )
+                        }
+                      >
+                        <ListItemText primary={child.label} />
+                      </ListItemButton>
+                    )
+                  )}
                 </List>
               </Collapse>
             </Box>

@@ -1,7 +1,7 @@
  
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { Box, TextField, Chip, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, TextField, Chip, Button, Autocomplete } from "@mui/material";
 import spec from "../data/openapi_agency_api.json";
 import EndpointCard from "../components/EndpointCard";
 import { colorMap } from "../functions/colorMap";
@@ -18,6 +18,11 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [methodFilter, setMethodFilter] = useState<string[]>([]);
   const [expandAll, setExpandAll] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setSearchTerm("");
+    setMethodFilter([])
+  }, [paths])
 
   const handleMethodChipClick = (method: string) => {
     setMethodFilter((prev) =>
@@ -38,15 +43,16 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
         mb={3}
       >
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-          <TextField
-            label="Search endpoints"
-            variant="outlined"
-            size="small"
+          <Autocomplete
+            options={Object.entries(paths).map(([,api]) => api.path)}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ minWidth: 300 }}
+            onChange={(event: any, newValue: string | null) => {
+              console.log(newValue)
+              setSearchTerm(!newValue ? "" : newValue);
+            }}
+            renderInput={(params) => <TextField {...params} label="Search Endpoints" variant="outlined" size="small" sx={{ minWidth: 300 }} />}
           />
-          {["get", "post", "put", "delete"].map((method) => (
+          {Array.from(new Set(Object.entries(paths).map(([, api]) => api.method))).map((method) => (
             <Chip
               key={method}
               label={method.toUpperCase()}
