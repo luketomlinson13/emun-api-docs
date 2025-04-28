@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Box, TextField, Chip, Button, Autocomplete } from '@mui/material';
-import spec from '../../public/data/openapi_agency_api.json'
 import EndpointCard from '../components/EndpointCard';
 import { colorMap } from '../functions/colorMap';
 import { RequestTypes } from '../interfaces/RequestTypes';
@@ -11,12 +10,25 @@ type ApiExplorerProps = {
 };
 
 const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
-  const definitions = spec.definitions;
-  const tag = spec.tags?.[0]?.name;
-
+  const [spec, setSpec] = useState<any | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [methodFilter, setMethodFilter] = useState<string[]>([]);
   const [expandAll, setExpandAll] = useState<boolean | null>(null);
+
+  // 🔥 Fetch spec.json dynamically on mount
+  useEffect(() => {
+    const fetchSpec = async () => {
+      try {
+        const response = await fetch('./data/openapi_agency_api.json');
+        const json = await response.json();
+        setSpec(json);
+      } catch (error) {
+        console.error('Failed to load OpenAPI spec:', error);
+      }
+    };
+
+    fetchSpec();
+  }, []);
 
   useEffect(() => {
     setSearchTerm('');
@@ -30,6 +42,14 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
   const handleExpandAll = () => setExpandAll(true);
   const handleCollapseAll = () => setExpandAll(false);
 
+  if (!spec) {
+    // 🚀 You can show a loading spinner here if you want
+    return <div>Loading API spec...</div>;
+  }
+
+  const definitions = spec.definitions;
+  const tag = spec.tags?.[0]?.name;
+
   return (
     <div className='p-6'>
       <Box display='flex' flexWrap='wrap' justifyContent='space-between' alignItems='center' mb={3}>
@@ -38,7 +58,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
             options={Object.entries(paths).map(([, api]) => api.path)}
             value={searchTerm}
             onChange={(_event: any, newValue: string | null) => {
-              console.log(newValue);
               setSearchTerm(!newValue ? '' : newValue);
             }}
             renderInput={(params) => (

@@ -41,38 +41,32 @@ export function Layout() {
     const loadSpec = async () => {
       let data;
 
-      // If dev then grab json locally or from vite proxy server (to bypass CORS issue)
-      if (import.meta.env.DEV) {
-        // Uncomment whichever way you wanna grab the JSON. Local for testing changes to the JSON and then the proxy server for production like functionality.
-        // Fetch the json locally
-        data = await import('../../../public/data/openapi_agency_api.json');
-
-        // Fetch the json from vite proxy server
-        // const res = await fetch("/api/agency/openapi_agency_api.json")        ;
-        // data = await res.json();
-      }
-      // Else production then grab the from the url
-      else {
-        data = await import('../../../public/data/openapi_agency_api.json');
-
-        return;
-
-        // Check with Sy if we can resolve CORS issue
-        const res = await fetch('https://emunvendors.ws.emuncloud.com/api/agency/openapi_agency_api.json');
-        data = await res.json();
+      // If in dev, load from local or proxy
+      try {
+        // Try loading from the public directory first
+        const response = await fetch('/data/openapi_agency_api.json');
+        if (response.ok) {
+          data = await response.json();
+        } else {
+          throw new Error('Failed to load local JSON');
+        }
+      } catch (error) {
+        console.error('Error loading spec:', error);
       }
 
-      const specData = data.default || data;
-      setJson(specData);
-      // @ts-ignore
-      setSidebarPaths(groupPaths(specData));
-      setDefinitionsGroup({
-        label: 'Definitions',
-        children: Object.entries(specData.definitions).map(([key, value]) => ({
-          label: key,
-          children: value,
-        })),
-      });
+      // Parse and set the spec data if successfully loaded
+      if (data) {
+        const specData = data.default || data;
+        setJson(specData);
+        setSidebarPaths(groupPaths(specData));
+        setDefinitionsGroup({
+          label: 'Definitions',
+          children: Object.entries(specData.definitions).map(([key, value]) => ({
+            label: key,
+            children: value,
+          })),
+        });
+      }
     };
 
     loadSpec();
@@ -110,7 +104,7 @@ export function Layout() {
     navigate(`?group=${encodeURIComponent(groupLabel)}&child=${encodeURIComponent(label)}`);
   };
 
-  if (!json) return null;
+  if (!json) return <Typography>Loading API Documentation...</Typography>;
 
   return (
     <Box sx={{ display: 'flex' }}>
