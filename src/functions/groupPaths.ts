@@ -21,23 +21,24 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
     Object.entries(pathItem).forEach(([method, operation]) => {
       const tags = operation.tags || [];
 
-      const parentTag = tags.find((tag) => tag.startsWith('Parent:'));
-      const subParentTag = tags.find((tag) => tag.startsWith('SubParent:'));
+      const parentTag = tags.find((tag) => tag.toLowerCase().startsWith('parent:'));
+      if (!parentTag) return; // Must have Parent at least
 
-      if (!parentTag || !subParentTag) return;
-
-      const parent = parentTag.replace('Parent:', '').trim();
-      const subParent = subParentTag.replace('SubParent:', '').trim();
+      const parent = parentTag.replace(/parent:/i, '').trim();
+      const subParentTag = tags.find((tag) => tag.toLowerCase().startsWith('subparent:'));
+      const subParent = subParentTag ? subParentTag.replace(/subparent:/i, '').trim() : undefined;
 
       if (!grouped[parent]) {
         grouped[parent] = {};
       }
 
-      if (!grouped[parent][subParent]) {
-        grouped[parent][subParent] = [];
+      const subParentKey = subParent || '__ungrouped__'; // fallback if no SubParent
+
+      if (!grouped[parent][subParentKey]) {
+        grouped[parent][subParentKey] = [];
       }
 
-      grouped[parent][subParent].push({
+      grouped[parent][subParentKey].push({
         path,
         method,
         operation,
@@ -48,10 +49,11 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
   const navigation: NavigationItem[] = Object.entries(grouped).map(([parentLabel, subParents]) => ({
     label: parentLabel,
     children: Object.entries(subParents).map(([subParentLabel, items]) => ({
-      label: subParentLabel,
+      label: subParentLabel === '__ungrouped__' ? '' : subParentLabel,
       children: items,
     })),
   }));
 
   return navigation;
 }
+
