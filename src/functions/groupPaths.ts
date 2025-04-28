@@ -1,4 +1,6 @@
 import { Operation, OpenApiSpec } from '../interfaces/openApiInterfaces';
+import { removePrefix } from './removePrefix';
+import { toTitleCase } from './toTitleCase';
 
 interface PathMeta {
   path: string;
@@ -21,13 +23,13 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
     Object.entries(pathItem).forEach(([method, operation]) => {
       const tags = operation.tags || [];
 
-      const parentTag = tags.find((tag) => tag.startsWith('Parent:'));
-      const subParentTag = tags.find((tag) => tag.startsWith('SubParent:'));
+      const parentTag = tags.find((tag) => tag.toLowerCase().startsWith('parent:'));
+      const subParentTag = tags.find((tag) => tag.toLowerCase().startsWith('subparent:'));
 
       if (!parentTag || !subParentTag) return;
 
-      const parent = parentTag.replace('Parent:', '').trim();
-      const subParent = subParentTag.replace('SubParent:', '').trim();
+      const parent = toTitleCase(removePrefix(parentTag, 'parent:'));
+      const subParent = toTitleCase(removePrefix(subParentTag, 'subparent:'));
 
       if (!grouped[parent]) {
         grouped[parent] = {};

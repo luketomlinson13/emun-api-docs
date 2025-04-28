@@ -29,7 +29,7 @@ interface EndpointCardProps {
   method: RequestTypes;
   path: string;
   summary: string;
-  description: string; // What goes in the How It Works Section
+  description?: string; // What goes in the How It Works Section
   parameters?: Parameter[];
   responses?: Response[];
   tag?: string;

@@ -4,7 +4,7 @@
     "title": "EMUN1 Data Integration",
     "version": "1.0"
   },
-  "host": "emun1-agency-sandbox.ws.emuncloud.com",
+  "host": "localhost:5001",
   "basePath": "/",
   "schemes": ["https"],
   "consumes": ["application/json"],
@@ -12,7 +12,7 @@
   "paths": {
     "/PurgeProductKitComponents": {
       "post": {
-        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Kit Component"],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "subParent:PurgeProductKitComponents"],
         "summary": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product kit components associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProductKitComponents_Post",
@@ -41,11 +41,16 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
     "/PurgeProducts": {
       "post": {
-        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Products"],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "subParent:PurgeProducts"],
         "summary": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProducts_Post",
@@ -74,11 +79,16 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
     "/PurgeProductTags": {
       "post": {
-        "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Product Tag"],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "subParent:PurgeProductTags"],
         "summary": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all product tags associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProductTags_Post",
@@ -107,11 +117,16 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
     "/PurgeVendorResources": {
       "post": {
-        "tags": ["EMUN1-Agency-API", "Parent:Vendors", "SubParent:Vendor Resources"],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "subParent:PurgeVendorResources"],
         "summary": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products, kit components, product tags associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeVendorResources_Post",
@@ -140,13 +155,23 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
     "/GetOrders": {
       "get": {
-        "tags": ["EMUN1-Agency-API", "Parent:Orders", "SubParent:Orders"],
+        "tags": [
+          "EMUN1-Agency-API",
+          "Parent:Orders",
+          "subParent:Get Orders",
+          "HowItWorks:The `GetOrders` API will only return confirmed orders. You can use the `Take` parameter to limit the number of orders returned. The `EMUN1` API will not return more than **250 orders** in a single call. If there are more orders, you will need to call it again after processing the first 250. The API returns a `total` field indicating the number of orders matching the query parameters provided.\n\n---\n\n### Sample Executions\n\n#### Retrieve Orders with OrderDate Exceeding a Specified Date\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderDateGreaterThan=2025-01-01\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders Not Marked as Downloaded\n\nIf you are posting a successful download back to EMUN, this query parameter can be utilized to retrieve new orders.\n\n```http\nGET {api url}/GetOrders.json?Take=20&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders with Higher Sequence Numbers\n\nOrder numbers in EMUN can be alphanumeric, but their numeric portions are always incremented. Input your latest sequence number to get orders with greater sequence numbers.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Combining Parameters\n\nYou can combine several parameters by adding them to the query string. This example retrieves the first 20 records where the order sequence is greater than the input value and the order has not been downloaded.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```"
+        ],
         "summary": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
-        "description": "The `GetOrders` API will only return confirmed orders. You can use the `Take` parameter to limit the number of orders returned. The `EMUN1` API will not return more than **250 orders** in a single call. If there are more orders, you will need to call it again after processing the first 250. The API returns a `total` field indicating the number of orders matching the query parameters provided.\n\n---\n\n### Sample Executions\n\n#### Retrieve Orders with OrderDate Exceeding a Specified Date\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderDateGreaterThan=2025-01-01\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders Not Marked as Downloaded\n\nIf you are posting a successful download back to EMUN, this query parameter can be utilized to retrieve new orders.\n\n```http\nGET {api url}/GetOrders.json?Take=20&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders with Higher Sequence Numbers\n\nOrder numbers in EMUN can be alphanumeric, but their numeric portions are always incremented. Input your latest sequence number to get orders with greater sequence numbers.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Combining Parameters\n\nYou can combine several parameters by adding them to the query string. This example retrieves the first 20 records where the order sequence is greater than the input value and the order has not been downloaded.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```",
+        "description": "Pull vendor/manufacturer orders from EMUN1. This will pull any order the authenticated user has access to based on query parameters they pass in.",
         "operationId": "QueryOrders_Get",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -218,13 +243,319 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/SaveKitComponent": {
+    "/deferredinvocations": {
+      "get": {
+        "tags": ["deferredinvocations"],
+        "operationId": "QueryDeferredInvocations_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Skip",
+            "in": "query",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "Take",
+            "in": "query",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Include",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Fields",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/QueryResponse_DeferredInvocation_"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": ["deferredinvocations"],
+        "operationId": "SaveDeferredInvocation_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "type": "string",
+            "x-nullable": false
+          },
+          {
+            "name": "EntityId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "EnqueuedAt",
+            "in": "query",
+            "type": "string",
+            "format": "date-time",
+            "x-nullable": false
+          },
+          {
+            "name": "InvokedAt",
+            "in": "query",
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "TypeName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Payload",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "CorrelationId",
+            "in": "query",
+            "type": "string",
+            "x-nullable": false
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SaveDeferredInvocation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/deferredinvocations/{Id}": {
+      "get": {
+        "tags": ["deferredinvocations"],
+        "operationId": "QueryDeferredInvocationsId_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Skip",
+            "in": "query",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "Take",
+            "in": "query",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Include",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Fields",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/QueryResponse_DeferredInvocation_"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": ["deferredinvocations"],
+        "operationId": "UpdateDeferredInvocationId_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "x-nullable": false
+          },
+          {
+            "name": "EntityId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "EnqueuedAt",
+            "in": "query",
+            "type": "string",
+            "format": "date-time",
+            "x-nullable": false
+          },
+          {
+            "name": "InvokedAt",
+            "in": "query",
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "TypeName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Payload",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "CorrelationId",
+            "in": "query",
+            "type": "string",
+            "x-nullable": false
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UpdateDeferredInvocation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["deferredinvocations"],
+        "operationId": "DeleteDeferredInvocationId_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/kitcomponentsautoqueries": {
       "post": {
         "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Kit Component"],
-        "summary": "Write a KitComponent record",
-        "description": "Write a KitComponent record",
+        "summary": "EMUN API Kit/Assortment setup for products",
+        "description": "EMUN API Kit/Assortment setup for products",
         "operationId": "SaveKitComponent_Post",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -289,13 +620,18 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/SaveProduct": {
+    "/products": {
       "post": {
         "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Products"],
-        "summary": "Write a Product record",
-        "description": "Write a Product record",
+        "summary": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
+        "description": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
         "operationId": "SaveProduct_Post",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -506,8 +842,7 @@
             "name": "CreatedOn",
             "in": "query",
             "type": "string",
-            "format": "date-time",
-            "x-nullable": false
+            "format": "date-time"
           },
           {
             "name": "MSRP",
@@ -537,13 +872,18 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/SaveProductTag": {
+    "/producttagautoqueries": {
       "post": {
         "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Product Tag"],
-        "summary": "Write a ProductTag record",
-        "description": "Write a ProductTag record",
+        "summary": "EMUN API Product Tags",
+        "description": "EMUN API Product Tags",
         "operationId": "SaveProductTag_Post",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -611,13 +951,18 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/SaveKitComponent/{Id}": {
+    "/kitcomponentsautoqueries/{Id}": {
       "put": {
         "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Kit Component"],
-        "summary": "Write a KitComponent record",
-        "description": "Write a KitComponent record",
+        "summary": "EMUN API Kit/Assortment setup for products",
+        "description": "EMUN API Kit/Assortment setup for products",
         "operationId": "UpdateKitComponentId_Create",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -683,13 +1028,18 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/UpdateOrderDownloaded/{OrderNumber}": {
+    "/orderdownloadedautoqueries/{OrderNumber}": {
       "put": {
-        "tags": ["EMUN1-Agency-API", "Parent:Orders", "SubParent:Order Downloaded"],
-        "summary": "Write a OrderDownloaded record",
-        "description": "Write a OrderDownloaded record",
+        "tags": ["EMUN1-Agency-API"],
+        "summary": "Update order downloaded flag and date it was downloaded",
+        "description": "Update order downloaded flag and date it was downloaded",
         "operationId": "UpdateOrderDownloadedOrderNumber_Create",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -733,13 +1083,67 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/SaveProduct/{ProductId}": {
+    "/orderupdateautoqueries/{OrderNumber}": {
+      "put": {
+        "tags": ["EMUN1-Agency-API", "Parent:Orders", "SubParent:Order Download"],
+        "summary": "Update order properties, vendor order status",
+        "description": "Update order properties, vendor order status",
+        "operationId": "UpdateOrderUpdateOrderNumber_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "OrderNumber",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "VendorOrderStatus",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UpdateOrderUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/products/{ProductId}": {
       "put": {
         "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Products"],
-        "summary": "Write a Product record",
-        "description": "Write a Product record",
+        "summary": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
+        "description": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
         "operationId": "UpdateProductProductId_Create",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -951,8 +1355,7 @@
             "name": "CreatedOn",
             "in": "query",
             "type": "string",
-            "format": "date-time",
-            "x-nullable": false
+            "format": "date-time"
           },
           {
             "name": "MSRP",
@@ -964,7 +1367,7 @@
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/SaveProduct"
+              "$ref": "#/definitions/UpdateProduct"
             }
           }
         ],
@@ -982,13 +1385,18 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     },
-    "/SaveProductTag/{Id}": {
+    "/producttagautoqueries/{Id}": {
       "put": {
         "tags": ["EMUN1-Agency-API", "Parent:Products", "SubParent:Product Tag"],
-        "summary": "Write a ProductTag record",
-        "description": "Write a ProductTag record",
+        "summary": "EMUN API Product Tags",
+        "description": "EMUN API Product Tags",
         "operationId": "UpdateProductTagId_Create",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -1057,7 +1465,1805 @@
             "Bearer": []
           }
         ]
-      }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/auth": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticate_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticate_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Authenticate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticate_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "options": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticate",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Authenticate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/auth/{provider}": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticateprovider_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticateprovider_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Authenticate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticateprovider_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "options": {
+        "tags": ["auth"],
+        "summary": "Sign In",
+        "description": "Sign In",
+        "operationId": "Authenticateprovider",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_token",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "oauth_verifier",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "RememberMe",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "qop",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "nc",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cnonce",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessToken",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AccessTokenSecret",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Authenticate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AuthenticateResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/assignroles": {
+      "post": {
+        "tags": ["auth"],
+        "operationId": "AssignRoles_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Permissions",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Roles",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AssignRoles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AssignRolesResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/unassignroles": {
+      "post": {
+        "tags": ["auth"],
+        "operationId": "UnAssignRoles_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Permissions",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Roles",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UnAssignRoles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UnAssignRolesResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/apikeys": {
+      "get": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeys_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeys_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeys_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeys_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/apikeys/{Environment}": {
+      "get": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeysEnvironment_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeysEnvironment_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeysEnvironment_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["auth"],
+        "operationId": "GetApiKeysEnvironment_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/apikeys/regenerate": {
+      "get": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerate_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerate_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerate_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerate_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/apikeys/regenerate/{Environment}": {
+      "get": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerateEnvironment_Get",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerateEnvironment_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerateEnvironment_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["auth"],
+        "operationId": "RegenerateApiKeysregenerateEnvironment_Delete",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Environment",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegenerateApiKeysResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
+    },
+    "/register": {
+      "put": {
+        "tags": ["auth"],
+        "summary": "Sign Up",
+        "description": "Sign Up",
+        "operationId": "Register_Create",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "FirstName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "LastName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "DisplayName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Email",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "ConfirmPassword",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AutoLogin",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Register"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegisterResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": ["auth"],
+        "summary": "Sign Up",
+        "description": "Sign Up",
+        "operationId": "Register_Post",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "UserName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "FirstName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "LastName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "DisplayName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Email",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "ConfirmPassword",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "AutoLogin",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "ErrorView",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "Meta",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Register"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/RegisterResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/Accept"
+        }
+      ]
     }
   },
   "definitions": {
@@ -1140,11 +3346,154 @@
       "description": "Dictionary<String,String>",
       "type": "object"
     },
+    "QueryDeferredInvocations": {
+      "title": "QueryDeferredInvocations",
+      "properties": {
+        "Id": {
+          "type": "string"
+        },
+        "Skip": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Take": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "OrderBy": {
+          "type": "string"
+        },
+        "OrderByDesc": {
+          "type": "string"
+        },
+        "Include": {
+          "type": "string"
+        },
+        "Fields": {
+          "type": "string"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "QueryDeferredInvocations",
+      "type": "object"
+    },
+    "CreateDeferredInvocation": {
+      "title": "CreateDeferredInvocation",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "x-nullable": false
+        },
+        "EntityId": {
+          "type": "string"
+        },
+        "EnqueuedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": false
+        },
+        "InvokedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "TypeName": {
+          "type": "string"
+        },
+        "Payload": {
+          "type": "string"
+        },
+        "CorrelationId": {
+          "type": "string",
+          "x-nullable": false
+        }
+      },
+      "description": "CreateDeferredInvocation",
+      "type": "object"
+    },
+    "SaveDeferredInvocation": {
+      "title": "SaveDeferredInvocation",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "x-nullable": false
+        },
+        "EntityId": {
+          "type": "string"
+        },
+        "EnqueuedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": false
+        },
+        "InvokedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "TypeName": {
+          "type": "string"
+        },
+        "Payload": {
+          "type": "string"
+        },
+        "CorrelationId": {
+          "type": "string",
+          "x-nullable": false
+        }
+      },
+      "description": "SaveDeferredInvocation",
+      "type": "object"
+    },
+    "DeleteDeferredInvocation": {
+      "title": "DeleteDeferredInvocation",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "x-nullable": false
+        }
+      },
+      "description": "DeleteDeferredInvocation",
+      "type": "object"
+    },
+    "UpdateDeferredInvocation": {
+      "title": "UpdateDeferredInvocation",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "x-nullable": false
+        },
+        "EntityId": {
+          "type": "string"
+        },
+        "EnqueuedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": false
+        },
+        "InvokedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "TypeName": {
+          "type": "string"
+        },
+        "Payload": {
+          "type": "string"
+        },
+        "CorrelationId": {
+          "type": "string",
+          "x-nullable": false
+        }
+      },
+      "description": "UpdateDeferredInvocation",
+      "type": "object"
+    },
     "CreateKitComponent": {
       "title": "CreateKitComponent",
       "properties": {
         "Id": {
-          "description": "The unique identifier of a kit component. This is a composite key that EMUN API creates and it is not required.",
+          "description": "The unique identifier of a kit component.  This is a composite key that EMUN API creates and it is not required.",
           "type": "string"
         },
         "Kit": {
@@ -1162,27 +3511,27 @@
           "x-nullable": false
         },
         "SalesPrice": {
-          "description": "The price of the component in the kit. Only populate if the price is different from the master product price.",
+          "description": "The price of the component in the kit.  Only populate if the price is different from the master product price.",
           "type": "number",
           "format": "double"
         },
         "VendorKitID": {
-          "description": "The SKU of the kit. This should match the SKU number in product master",
+          "description": "The SKU of the kit.  This should match the SKU number in product master",
           "type": "string"
         },
         "VendorID": {
-          "description": "The vendor ID of the kit. This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
+          "description": "The vendor ID of the kit.  This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
           "type": "string"
         }
       },
-      "description": "Write a KitComponent record",
+      "description": "EMUN API Kit/Assortment setup for products",
       "type": "object"
     },
     "SaveKitComponent": {
       "title": "SaveKitComponent",
       "properties": {
         "Id": {
-          "description": "The unique identifier of a kit component. This is a composite key that EMUN API creates and it is not required.",
+          "description": "The unique identifier of a kit component.  This is a composite key that EMUN API creates and it is not required.",
           "type": "string"
         },
         "Kit": {
@@ -1200,20 +3549,203 @@
           "x-nullable": false
         },
         "SalesPrice": {
-          "description": "The price of the component in the kit. Only populate if the price is different from the master product price.",
+          "description": "The price of the component in the kit.  Only populate if the price is different from the master product price.",
           "type": "number",
           "format": "double"
         },
         "VendorKitID": {
-          "description": "The SKU of the kit. This should match the SKU number in product master",
+          "description": "The SKU of the kit.  This should match the SKU number in product master",
           "type": "string"
         },
         "VendorID": {
-          "description": "The vendor ID of the kit. This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
+          "description": "The vendor ID of the kit.  This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
           "type": "string"
         }
       },
-      "description": "Write a KitComponent record",
+      "description": "EMUN API Kit/Assortment setup for products",
+      "type": "object"
+    },
+    "CreateProduct": {
+      "title": "CreateProduct",
+      "properties": {
+        "ProductId": {
+          "description": "The unique identifier for the product",
+          "type": "string"
+        },
+        "VendorSku": {
+          "description": "The vendor Sku number of the product",
+          "type": "string"
+        },
+        "ProductName": {
+          "description": "The short description of the product",
+          "type": "string"
+        },
+        "Description": {
+          "description": "The additional verbose description of the product",
+          "type": "string"
+        },
+        "UpcCode": {
+          "description": "The UPC code of the product",
+          "type": "string"
+        },
+        "ItemStatus": {
+          "description": "The status of the product. Active or Inactive",
+          "type": "string"
+        },
+        "UnitMeasure": {
+          "description": "The unit of measure for the product",
+          "type": "string"
+        },
+        "SalesPrice": {
+          "description": "The current price of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak1": {
+          "description": "The discount level 1 for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak1Price": {
+          "description": "The sales price level 1 of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak2": {
+          "description": "The discount level 2 for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak2Price": {
+          "description": "The sales price level 2 of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak3": {
+          "description": "The discount level 3 for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak3Price": {
+          "description": "The sales price level 3 of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "Category": {
+          "description": "The category of the product",
+          "type": "string"
+        },
+        "MinimumOrderQty": {
+          "description": "The minimum order quantity of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "PurchaseIncrement": {
+          "description": "The purchase increment of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "SubCategory": {
+          "description": "The sub-category of the product",
+          "type": "string"
+        },
+        "UnitsInStock": {
+          "description": "The number of units in stock.  Defaulted from QtyAvailable",
+          "type": "integer",
+          "format": "int64"
+        },
+        "Sellable": {
+          "description": "Indicates if the product is sellable",
+          "type": "boolean"
+        },
+        "ItemType": {
+          "description": "The type of the product",
+          "type": "string"
+        },
+        "DefaultShipDate": {
+          "description": "The default ship date of the product.  The item will default to this ship date if populated.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "NextAvailableDate": {
+          "description": "The next available date of the product",
+          "type": "string",
+          "format": "date-time"
+        },
+        "CaseQty": {
+          "description": "The case quantity of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "KitExplodeOnOrder": {
+          "description": "Indicates if the kit components explode to the order.  If true each component is added as a separate line item on the order. If false, the kit is treated as a single item on the order.",
+          "type": "boolean"
+        },
+        "QtyAvailable": {
+          "description": "The quantity available for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "NonDiscountable": {
+          "description": "Indicates if the product is non-discountable. If true this item will not receive any additional discounts",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "VendorId": {
+          "description": "The vendor ID of the product.  This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
+          "type": "string"
+        },
+        "PersonalizationMaxNumLines": {
+          "description": "The maximum number of lines for personalization or notes on the product",
+          "type": "integer",
+          "format": "int32"
+        },
+        "MaxCharacters": {
+          "description": "The maximum number of characters for personalization",
+          "type": "integer",
+          "format": "int32"
+        },
+        "B2BSellable": {
+          "description": "Indicates if the product is sellable in a B2B context",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "B2CSellable": {
+          "description": "Indicates if the product is sellable in a B2C context",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "ProductTags": {
+          "description": "Tags associated with the product",
+          "type": "string"
+        },
+        "KitEditable": {
+          "description": "Indicates if the kit is editable.  If true the components are exploded to the order and qty's can be edited.  If not editable, the component qty's cannot be modified",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "NewIntroduction": {
+          "description": "Indicates if the product is a new introduction",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "ListPrice": {
+          "description": "The list price of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "CreatedOn": {
+          "description": "The creation date or intro date of the product",
+          "type": "string",
+          "format": "date-time"
+        },
+        "MSRP": {
+          "description": "The MSRP price of the product",
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "description": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
       "type": "object"
     },
     "SaveProduct": {
@@ -1301,7 +3833,7 @@
           "type": "string"
         },
         "UnitsInStock": {
-          "description": "The number of units in stock. Defaulted from QtyAvailable",
+          "description": "The number of units in stock.  Defaulted from QtyAvailable",
           "type": "integer",
           "format": "int64"
         },
@@ -1314,7 +3846,7 @@
           "type": "string"
         },
         "DefaultShipDate": {
-          "description": "The default ship date of the product. The item will default to this ship date if populated.",
+          "description": "The default ship date of the product.  The item will default to this ship date if populated.",
           "type": "string",
           "format": "date-time"
         },
@@ -1329,7 +3861,7 @@
           "format": "double"
         },
         "KitExplodeOnOrder": {
-          "description": "Indicates if the kit components explode to the order. If true each component is added as a separate line item on the order. If false, the kit is treated as a single item on the order.",
+          "description": "Indicates if the kit components explode to the order.  If true each component is added as a separate line item on the order. If false, the kit is treated as a single item on the order.",
           "type": "boolean"
         },
         "QtyAvailable": {
@@ -1343,7 +3875,7 @@
           "x-nullable": false
         },
         "VendorId": {
-          "description": "The vendor ID of the product. This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
+          "description": "The vendor ID of the product.  This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
           "type": "string"
         },
         "PersonalizationMaxNumLines": {
@@ -1371,7 +3903,7 @@
           "type": "string"
         },
         "KitEditable": {
-          "description": "Indicates if the kit is editable. If true the components are exploded to the order and qty's can be edited. If not editable, the component qty's cannot be modified",
+          "description": "Indicates if the kit is editable.  If true the components are exploded to the order and qty's can be edited.  If not editable, the component qty's cannot be modified",
           "type": "boolean",
           "x-nullable": false
         },
@@ -1388,8 +3920,7 @@
         "CreatedOn": {
           "description": "The creation date or intro date of the product",
           "type": "string",
-          "format": "date-time",
-          "x-nullable": false
+          "format": "date-time"
         },
         "MSRP": {
           "description": "The MSRP price of the product",
@@ -1397,7 +3928,7 @@
           "format": "double"
         }
       },
-      "description": "Write a Product record",
+      "description": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
       "type": "object"
     },
     "CreateProductTag": {
@@ -1437,7 +3968,7 @@
           "type": "string"
         }
       },
-      "description": "Write a ProductTag record",
+      "description": "EMUN API Product Tags",
       "type": "object"
     },
     "SaveProductTag": {
@@ -1477,14 +4008,14 @@
           "type": "string"
         }
       },
-      "description": "Write a ProductTag record",
+      "description": "EMUN API Product Tags",
       "type": "object"
     },
     "UpdateKitComponent": {
       "title": "UpdateKitComponent",
       "properties": {
         "Id": {
-          "description": "The unique identifier of a kit component. This is a composite key that EMUN API creates and it is not required.",
+          "description": "The unique identifier of a kit component.  This is a composite key that EMUN API creates and it is not required.",
           "type": "string"
         },
         "Kit": {
@@ -1502,20 +4033,20 @@
           "x-nullable": false
         },
         "SalesPrice": {
-          "description": "The price of the component in the kit. Only populate if the price is different from the master product price.",
+          "description": "The price of the component in the kit.  Only populate if the price is different from the master product price.",
           "type": "number",
           "format": "double"
         },
         "VendorKitID": {
-          "description": "The SKU of the kit. This should match the SKU number in product master",
+          "description": "The SKU of the kit.  This should match the SKU number in product master",
           "type": "string"
         },
         "VendorID": {
-          "description": "The vendor ID of the kit. This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
+          "description": "The vendor ID of the kit.  This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
           "type": "string"
         }
       },
-      "description": "Write a KitComponent record",
+      "description": "EMUN API Kit/Assortment setup for products",
       "type": "object"
     },
     "UpdateOrderDownloaded": {
@@ -1535,7 +4066,205 @@
           "format": "date-time"
         }
       },
-      "description": "Write a OrderDownloaded record",
+      "description": "Update order downloaded flag and date it was downloaded",
+      "type": "object"
+    },
+    "UpdateOrderUpdate": {
+      "title": "UpdateOrderUpdate",
+      "properties": {
+        "OrderNumber": {
+          "description": "The unique identifier for the order",
+          "type": "string"
+        },
+        "VendorOrderStatus": {
+          "description": "The vendor order status",
+          "type": "string"
+        }
+      },
+      "description": "Update order properties, vendor order status",
+      "type": "object"
+    },
+    "UpdateProduct": {
+      "title": "UpdateProduct",
+      "properties": {
+        "ProductId": {
+          "description": "The unique identifier for the product",
+          "type": "string"
+        },
+        "VendorSku": {
+          "description": "The vendor Sku number of the product",
+          "type": "string"
+        },
+        "ProductName": {
+          "description": "The short description of the product",
+          "type": "string"
+        },
+        "Description": {
+          "description": "The additional verbose description of the product",
+          "type": "string"
+        },
+        "UpcCode": {
+          "description": "The UPC code of the product",
+          "type": "string"
+        },
+        "ItemStatus": {
+          "description": "The status of the product. Active or Inactive",
+          "type": "string"
+        },
+        "UnitMeasure": {
+          "description": "The unit of measure for the product",
+          "type": "string"
+        },
+        "SalesPrice": {
+          "description": "The current price of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak1": {
+          "description": "The discount level 1 for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak1Price": {
+          "description": "The sales price level 1 of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak2": {
+          "description": "The discount level 2 for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak2Price": {
+          "description": "The sales price level 2 of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak3": {
+          "description": "The discount level 3 for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "QtyBreak3Price": {
+          "description": "The sales price level 3 of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "Category": {
+          "description": "The category of the product",
+          "type": "string"
+        },
+        "MinimumOrderQty": {
+          "description": "The minimum order quantity of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "PurchaseIncrement": {
+          "description": "The purchase increment of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "SubCategory": {
+          "description": "The sub-category of the product",
+          "type": "string"
+        },
+        "UnitsInStock": {
+          "description": "The number of units in stock.  Defaulted from QtyAvailable",
+          "type": "integer",
+          "format": "int64"
+        },
+        "Sellable": {
+          "description": "Indicates if the product is sellable",
+          "type": "boolean"
+        },
+        "ItemType": {
+          "description": "The type of the product",
+          "type": "string"
+        },
+        "DefaultShipDate": {
+          "description": "The default ship date of the product.  The item will default to this ship date if populated.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "NextAvailableDate": {
+          "description": "The next available date of the product",
+          "type": "string",
+          "format": "date-time"
+        },
+        "CaseQty": {
+          "description": "The case quantity of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "KitExplodeOnOrder": {
+          "description": "Indicates if the kit components explode to the order.  If true each component is added as a separate line item on the order. If false, the kit is treated as a single item on the order.",
+          "type": "boolean"
+        },
+        "QtyAvailable": {
+          "description": "The quantity available for the product",
+          "type": "number",
+          "format": "double"
+        },
+        "NonDiscountable": {
+          "description": "Indicates if the product is non-discountable. If true this item will not receive any additional discounts",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "VendorId": {
+          "description": "The vendor ID of the product.  This is a unique identifier for the vendor and will be provided to the vendor by EMUN",
+          "type": "string"
+        },
+        "PersonalizationMaxNumLines": {
+          "description": "The maximum number of lines for personalization or notes on the product",
+          "type": "integer",
+          "format": "int32"
+        },
+        "MaxCharacters": {
+          "description": "The maximum number of characters for personalization",
+          "type": "integer",
+          "format": "int32"
+        },
+        "B2BSellable": {
+          "description": "Indicates if the product is sellable in a B2B context",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "B2CSellable": {
+          "description": "Indicates if the product is sellable in a B2C context",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "ProductTags": {
+          "description": "Tags associated with the product",
+          "type": "string"
+        },
+        "KitEditable": {
+          "description": "Indicates if the kit is editable.  If true the components are exploded to the order and qty's can be edited.  If not editable, the component qty's cannot be modified",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "NewIntroduction": {
+          "description": "Indicates if the product is a new introduction",
+          "type": "boolean",
+          "x-nullable": false
+        },
+        "ListPrice": {
+          "description": "The list price of the product",
+          "type": "number",
+          "format": "double"
+        },
+        "CreatedOn": {
+          "description": "The creation date or intro date of the product",
+          "type": "string",
+          "format": "date-time"
+        },
+        "MSRP": {
+          "description": "The MSRP price of the product",
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "description": "## Insert/Update Item Master\n- Updates or inserts Item Master based on **SKU** as the primary key.\n- **ProductId** is required.\n- **VendorId** is required (this ID is provided by the agency or EMUN).",
       "type": "object"
     },
     "UpdateProductTag": {
@@ -1575,7 +4304,182 @@
           "type": "string"
         }
       },
-      "description": "Write a ProductTag record",
+      "description": "EMUN API Product Tags",
+      "type": "object"
+    },
+    "Authenticate": {
+      "title": "Authenticate",
+      "properties": {
+        "provider": {
+          "description": "AuthProvider, e.g. credentials",
+          "type": "string"
+        },
+        "State": {
+          "type": "string"
+        },
+        "oauth_token": {
+          "type": "string"
+        },
+        "oauth_verifier": {
+          "type": "string"
+        },
+        "UserName": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        },
+        "RememberMe": {
+          "type": "boolean"
+        },
+        "ErrorView": {
+          "type": "string"
+        },
+        "nonce": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        },
+        "qop": {
+          "type": "string"
+        },
+        "nc": {
+          "type": "string"
+        },
+        "cnonce": {
+          "type": "string"
+        },
+        "AccessToken": {
+          "type": "string"
+        },
+        "AccessTokenSecret": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "Sign In",
+      "type": "object"
+    },
+    "AssignRoles": {
+      "title": "AssignRoles",
+      "properties": {
+        "UserName": {
+          "type": "string"
+        },
+        "Permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "AssignRoles",
+      "type": "object"
+    },
+    "UnAssignRoles": {
+      "title": "UnAssignRoles",
+      "properties": {
+        "UserName": {
+          "type": "string"
+        },
+        "Permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "UnAssignRoles",
+      "type": "object"
+    },
+    "GetApiKeys": {
+      "title": "GetApiKeys",
+      "properties": {
+        "Environment": {
+          "type": "string"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "GetApiKeys",
+      "type": "object"
+    },
+    "RegenerateApiKeys": {
+      "title": "RegenerateApiKeys",
+      "properties": {
+        "Environment": {
+          "type": "string"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "RegenerateApiKeys",
+      "type": "object"
+    },
+    "Register": {
+      "title": "Register",
+      "properties": {
+        "UserName": {
+          "type": "string"
+        },
+        "FirstName": {
+          "type": "string"
+        },
+        "LastName": {
+          "type": "string"
+        },
+        "DisplayName": {
+          "type": "string"
+        },
+        "Email": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        },
+        "ConfirmPassword": {
+          "type": "string"
+        },
+        "AutoLogin": {
+          "type": "boolean"
+        },
+        "ErrorView": {
+          "type": "string"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "Sign Up",
       "type": "object"
     },
     "QueryResponse_Order_": {
@@ -1643,7 +4547,7 @@
           "type": "string"
         },
         "VendorId": {
-          "description": "The ID of the vendor or manufacturer for this order. This is the vendor id in the EMUN1 platform.",
+          "description": "The ID of the vendor or manufacturer for this order.  This is the vendor id in the EMUN1 platform.",
           "type": "string"
         },
         "VendorName": {
@@ -1655,11 +4559,11 @@
           "type": "string"
         },
         "TransactionType": {
-          "description": "The transaction type, such as Regular Order or Return. This will always be 'Order' for Agency sales orders.",
+          "description": "The transaction type, such as Regular Order or Return.  This will always be 'Order' for Agency sales orders.",
           "type": "string"
         },
         "SalesRepID": {
-          "description": "The ID of the sales representative responsible for the order. This is the Agency rep id.",
+          "description": "The ID of the sales representative responsible for the order.  This is the Agency rep id.",
           "type": "string"
         },
         "RepName": {
@@ -1709,7 +4613,7 @@
           "type": "string"
         },
         "Source": {
-          "description": "The source or channel through which the order was placed. Road, Show, Web, Phone, etc.",
+          "description": "The source or channel through which the order was placed.  Road, Show, Web, Phone, etc.",
           "type": "string"
         },
         "GeneratedFrom": {
@@ -1718,6 +4622,14 @@
         },
         "Notes": {
           "description": "Notes associated with the order.",
+          "type": "string"
+        },
+        "PromoCode1": {
+          "description": "Promotion 1 added to order.",
+          "type": "string"
+        },
+        "PromoCode2": {
+          "description": "Promotion 2 added to order.",
           "type": "string"
         },
         "ShipId": {
@@ -1764,6 +4676,10 @@
           "description": "Recipient name for the shipment.",
           "type": "string"
         },
+        "RetailerCarrierAccountID": {
+          "description": "Shipping carrier account ID.",
+          "type": "string"
+        },
         "BillAddress": {
           "description": "Billing address line 1.",
           "type": "string"
@@ -1790,6 +4706,14 @@
         },
         "BillPhone": {
           "description": "Phone number for billing inquiries.",
+          "type": "string"
+        },
+        "BillToFederalTaxNumber": {
+          "description": "Bill to federal tax number.",
+          "type": "string"
+        },
+        "BillToStateTaxNumber": {
+          "description": "State state tax number.",
           "type": "string"
         },
         "PaymentTerms": {
@@ -1894,7 +4818,7 @@
           "x-nullable": false
         },
         "ExtendedTotal": {
-          "description": "Extended total amount for this line (Qty x Price). This total includes discounts applied at the line level.",
+          "description": "Extended total amount for this line (Qty x Price).  This total includes discounts applied at the line level.",
           "type": "number",
           "format": "double",
           "x-nullable": false
@@ -1949,7 +4873,7 @@
           "x-nullable": false
         },
         "KitComponentParentPosition": {
-          "description": "Parent position number if this line is part of a kit. This represents the position of the kit item in the order.",
+          "description": "Parent position number if this line is part of a kit.  This represents the position of the kit item in the order.",
           "type": "integer",
           "format": "int32",
           "x-nullable": false
@@ -1964,7 +4888,7 @@
           "type": "string"
         },
         "VendorId": {
-          "description": "The ID of the vendor or manufacturer for this order. This is the vendor id in the EMUN1 platform",
+          "description": "The ID of the vendor or manufacturer for this order.  This is the vendor id in the EMUN1 platform",
           "type": "string"
         }
       },
@@ -2015,6 +4939,113 @@
       "description": "ResponseError",
       "type": "object"
     },
+    "QueryResponse_DeferredInvocation_": {
+      "title": "QueryResponse`1",
+      "properties": {
+        "Offset": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": false
+        },
+        "Total": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": false
+        },
+        "Results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeferredInvocation"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "description": "QueryResponse<DeferredInvocation>",
+      "type": "object"
+    },
+    "DeferredInvocation": {
+      "title": "DeferredInvocation",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "x-nullable": false
+        },
+        "Operation": {
+          "type": "string"
+        },
+        "Request": {
+          "$ref": "#/definitions/JsonObject"
+        },
+        "EntityId": {
+          "type": "string"
+        },
+        "EnqueuedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": false
+        },
+        "InvokedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "TypeName": {
+          "type": "string"
+        },
+        "CorrelationId": {
+          "type": "string",
+          "x-nullable": false
+        }
+      },
+      "description": "DeferredInvocation",
+      "type": "object"
+    },
+    "JsonObject": {
+      "title": "JsonObject",
+      "properties": {
+        "Item": {
+          "type": "string"
+        },
+        "Comparer": {
+          "$ref": "#/definitions/IEqualityComparer_String_"
+        },
+        "Count": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": false
+        },
+        "Keys": {
+          "$ref": "#/definitions/KeyCollection_String_String_"
+        },
+        "Values": {
+          "$ref": "#/definitions/ValueCollection_String_String_"
+        }
+      },
+      "description": "JsonObject",
+      "type": "object"
+    },
+    "IEqualityComparer_String_": {
+      "title": "IEqualityComparer`1",
+      "properties": {},
+      "description": "IEqualityComparer<String>",
+      "type": "object"
+    },
+    "KeyCollection_String_String_": {
+      "title": "KeyCollection",
+      "properties": {},
+      "description": "KeyCollection<String,String>",
+      "type": "object"
+    },
+    "ValueCollection_String_String_": {
+      "title": "ValueCollection",
+      "properties": {},
+      "description": "ValueCollection<String,String>",
+      "type": "object"
+    },
     "IdResponse": {
       "title": "IdResponse",
       "properties": {
@@ -2026,6 +5057,206 @@
         }
       },
       "description": "IdResponse",
+      "type": "object"
+    },
+    "AuthenticateResponse": {
+      "title": "AuthenticateResponse",
+      "properties": {
+        "UserId": {
+          "type": "string"
+        },
+        "SessionId": {
+          "type": "string"
+        },
+        "UserName": {
+          "type": "string"
+        },
+        "DisplayName": {
+          "type": "string"
+        },
+        "ReferrerUrl": {
+          "type": "string"
+        },
+        "BearerToken": {
+          "type": "string"
+        },
+        "RefreshToken": {
+          "type": "string"
+        },
+        "ProfileUrl": {
+          "type": "string"
+        },
+        "Roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "AuthenticateResponse",
+      "type": "object"
+    },
+    "AssignRolesResponse": {
+      "title": "AssignRolesResponse",
+      "properties": {
+        "AllRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "AllPermissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "description": "AssignRolesResponse",
+      "type": "object"
+    },
+    "UnAssignRolesResponse": {
+      "title": "UnAssignRolesResponse",
+      "properties": {
+        "AllRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "AllPermissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "description": "UnAssignRolesResponse",
+      "type": "object"
+    },
+    "GetApiKeysResponse": {
+      "title": "GetApiKeysResponse",
+      "properties": {
+        "Results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserApiKey"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "description": "GetApiKeysResponse",
+      "type": "object"
+    },
+    "UserApiKey": {
+      "title": "UserApiKey",
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "KeyType": {
+          "type": "string"
+        },
+        "ExpiryDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "UserApiKey",
+      "type": "object"
+    },
+    "RegenerateApiKeysResponse": {
+      "title": "RegenerateApiKeysResponse",
+      "properties": {
+        "Results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserApiKey"
+          }
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "description": "RegenerateApiKeysResponse",
+      "type": "object"
+    },
+    "RegisterResponse": {
+      "title": "RegisterResponse",
+      "properties": {
+        "UserId": {
+          "type": "string"
+        },
+        "SessionId": {
+          "type": "string"
+        },
+        "UserName": {
+          "type": "string"
+        },
+        "ReferrerUrl": {
+          "type": "string"
+        },
+        "BearerToken": {
+          "type": "string"
+        },
+        "RefreshToken": {
+          "type": "string"
+        },
+        "Roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ResponseStatus": {
+          "$ref": "#/definitions/ResponseStatus"
+        },
+        "Meta": {
+          "$ref": "#/definitions/Dictionary_String_String_"
+        }
+      },
+      "description": "RegisterResponse",
       "type": "object"
     }
   },
@@ -2048,7 +5279,49 @@
   },
   "tags": [
     {
+      "name": "auth"
+    },
+    {
+      "name": "deferredinvocations"
+    },
+    {
       "name": "EMUN1-Agency-API"
+    },
+    {
+      "name": "HowItWorks:The `GetOrders` API will only return confirmed orders. You can use the `Take` parameter to limit the number of orders returned. The `EMUN1` API will not return more than **250 orders** in a single call. If there are more orders, you will need to call it again after processing the first 250. The API returns a `total` field indicating the number of orders matching the query parameters provided.\n\n---\n\n### Sample Executions\n\n#### Retrieve Orders with OrderDate Exceeding a Specified Date\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderDateGreaterThan=2025-01-01\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders Not Marked as Downloaded\n\nIf you are posting a successful download back to EMUN, this query parameter can be utilized to retrieve new orders.\n\n```http\nGET {api url}/GetOrders.json?Take=20&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Retrieve Orders with Higher Sequence Numbers\n\nOrder numbers in EMUN can be alphanumeric, but their numeric portions are always incremented. Input your latest sequence number to get orders with greater sequence numbers.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```\n\n#### Combining Parameters\n\nYou can combine several parameters by adding them to the query string. This example retrieves the first 20 records where the order sequence is greater than the input value and the order has not been downloaded.\n\n```http\nGET {api url}/GetOrders.json?Take=20&OrderSequenceGreaterThan=OC-1632896&Downloaded=false\ncontent-type: application/json\nAuthorization: Bearer {Your Bearer Token}\n```"
+    },
+    {
+      "name": "Parent:Orders"
+    },
+    {
+      "name": "Parent:Products"
+    },
+    {
+      "name": "subParent:Get Orders"
+    },
+    {
+      "name": "SubParent:Kit Component"
+    },
+    {
+      "name": "SubParent:Order Download"
+    },
+    {
+      "name": "SubParent:Product Tag"
+    },
+    {
+      "name": "SubParent:Products"
+    },
+    {
+      "name": "subParent:PurgeProductKitComponents"
+    },
+    {
+      "name": "subParent:PurgeProducts"
+    },
+    {
+      "name": "subParent:PurgeProductTags"
+    },
+    {
+      "name": "subParent:PurgeVendorResources"
     }
   ]
 }

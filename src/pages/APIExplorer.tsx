@@ -4,6 +4,7 @@ import spec from '../data/openapi_agency_api.json';
 import EndpointCard from '../components/EndpointCard';
 import { colorMap } from '../functions/colorMap';
 import { RequestTypes } from '../interfaces/RequestTypes';
+import { removePrefix } from '../functions/removePrefix';
 
 type ApiExplorerProps = {
   paths: Record<string, any>;
@@ -79,13 +80,16 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
 
         if (!matchesMethod || !matchesSearch) return null;
 
+        const howItWorksTag = operation.tags.find((tag: string) => tag.toLowerCase().includes('howitworks:'));
+        const howItWorksMd = removePrefix(howItWorksTag, 'howitworks:');
+
         return (
           <EndpointCard
             key={operation.operationId}
             method={method as RequestTypes}
             path={path}
             summary={operation.summary}
-            description={operation.description}
+            description={howItWorksMd}
             parameters={operation.parameters}
             responses={operation.responses}
             tag={operation.tags?.[0] || tag}
