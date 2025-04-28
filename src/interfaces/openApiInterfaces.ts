@@ -25,7 +25,7 @@ export interface Operation {
   operationId: string;
   consumes: string[];
   produces: string[];
-  parameters: Parameter[];
+  parameters?: Parameter[];
   responses: Record<string, Response>;
   deprecated: boolean;
   security: Security[];

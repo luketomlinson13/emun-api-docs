@@ -45,7 +45,7 @@ export function Layout() {
       if (import.meta.env.DEV) {
         // Uncomment whichever way you wanna grab the JSON. Local for testing changes to the JSON and then the proxy server for production like functionality.
         // Fetch the json locally
-        data = await import('../../data/openapi_agency_api_dev.json');
+        data = await import('../../../public/data/openapi_agency_api.json');
 
         // Fetch the json from vite proxy server
         // const res = await fetch("/api/agency/openapi_agency_api.json")        ;
@@ -53,7 +53,7 @@ export function Layout() {
       }
       // Else production then grab the from the url
       else {
-        data = await import('../../data/openapi_agency_api_dev.json');
+        data = await import('../../../public/data/openapi_agency_api.json');
 
         return;
 
@@ -64,6 +64,7 @@ export function Layout() {
 
       const specData = data.default || data;
       setJson(specData);
+      // @ts-ignore
       setSidebarPaths(groupPaths(specData));
       setDefinitionsGroup({
         label: 'Definitions',

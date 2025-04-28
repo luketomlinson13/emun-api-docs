@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, TextField, Chip, Button, Autocomplete } from '@mui/material';
-import spec from '../data/openapi_agency_api.json';
+import spec from '../../public/data/openapi_agency_api.json'
 import EndpointCard from '../components/EndpointCard';
 import { colorMap } from '../functions/colorMap';
 import { RequestTypes } from '../interfaces/RequestTypes';
@@ -37,7 +37,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({ paths }) => {
           <Autocomplete
             options={Object.entries(paths).map(([, api]) => api.path)}
             value={searchTerm}
-            onChange={(event: any, newValue: string | null) => {
+            onChange={(_event: any, newValue: string | null) => {
               console.log(newValue);
               setSearchTerm(!newValue ? '' : newValue);
             }}
