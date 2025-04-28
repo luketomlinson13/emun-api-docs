@@ -35,11 +35,13 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
         grouped[parent] = {};
       }
 
-      if (!grouped[parent][subParent]) {
-        grouped[parent][subParent] = [];
+      const subParentKey = subParent || '__ungrouped__'; // fallback if no SubParent
+
+      if (!grouped[parent][subParentKey]) {
+        grouped[parent][subParentKey] = [];
       }
 
-      grouped[parent][subParent].push({
+      grouped[parent][subParentKey].push({
         path,
         method,
         operation,
@@ -50,7 +52,7 @@ export function groupPaths(spec: OpenApiSpec): NavigationItem[] {
   const navigation: NavigationItem[] = Object.entries(grouped).map(([parentLabel, subParents]) => ({
     label: parentLabel,
     children: Object.entries(subParents).map(([subParentLabel, items]) => ({
-      label: subParentLabel,
+      label: subParentLabel === '__ungrouped__' ? '' : subParentLabel,
       children: items,
     })),
   }));
