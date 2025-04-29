@@ -1,0 +1,57 @@
+{
+    "QueryDeferredInvocations": {
+      "hideDefinition": true
+    },
+    "CreateDeferredInvocation": {
+      "hideDefinition": true
+    },
+    "SaveDeferredInvocation": {
+      "hideDefinition": true
+    },
+    "DeleteDeferredInvocation": {
+      "hideDefinition": true
+    },
+    "UpdateDeferredInvocation": {
+      "hideDefinition": true
+    },
+    "AssignRoles": {
+      "hideDefinition": true
+    },
+    "UnAssignRoles": {
+      "hideDefinition": true
+    },
+    "GetApiKeys": {
+      "hideDefinition": true
+    },
+    "RegenerateApiKeys": {
+      "hideDefinition": true
+    },
+    "Register": {
+      "hideDefinition": true
+    },
+    "QueryResponse_DeferredInvocation_": {
+      "hideDefinition": true
+    },
+    "DeferredInvocation": {
+      "hideDefinition": true
+    },
+    "AssignRolesResponse": {
+      "hideDefinition": true
+    },
+    "UnAssignRolesResponse": {
+      "hideDefinition": true
+    },
+    "GetApiKeysResponse": {
+      "hideDefinition": true
+    },
+    "UserApiKey": {
+      "hideDefinition": true
+    },
+    "RegenerateApiKeysResponse": {
+      "hideDefinition": true
+    },
+    "RegisterResponse": {
+      "hideDefinition": true
+    }
+  }
+  

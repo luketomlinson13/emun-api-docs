@@ -39,32 +39,51 @@ export function Layout() {
 
   useEffect(() => {
     const loadSpec = async () => {
-      let data;
+      let specData;
+      let uiConfigData;
 
-      // If in dev, load from local or proxy
       try {
-        // Try loading from the public directory first
-        const response = await fetch('/data/openapi_agency_api.json');
-        if (response.ok) {
-          data = await response.json();
+        const [specResponse, uiConfigResponse] = await Promise.all([
+          fetch('/data/openapi_agency_api.json'),
+          fetch('/data/ui_config.json'),
+        ]);
+
+        if (specResponse.ok) {
+          specData = await specResponse.json();
         } else {
-          throw new Error('Failed to load local JSON');
+          throw new Error('Failed to load openapi_agency_api.json');
+        }
+
+        if (uiConfigResponse.ok) {
+          uiConfigData = await uiConfigResponse.json();
+        } else {
+          throw new Error('Failed to load ui_config.json');
         }
       } catch (error) {
-        console.error('Error loading spec:', error);
+        console.error('Error loading specs:', error);
+        return;
       }
 
-      // Parse and set the spec data if successfully loaded
-      if (data) {
-        const specData = data.default || data;
+      if (specData) {
+        specData = specData.default || specData;
         setJson(specData);
-        setSidebarPaths(groupPaths(specData));
-        setDefinitionsGroup({
-          label: 'Definitions',
-          children: Object.entries(specData.definitions).map(([key, value]) => ({
+
+        const sidebar = groupPaths(specData);
+
+        // Filtering Definitions based on uiConfig
+        const definitions = Object.entries(specData.definitions)
+          .filter(([key]) => {
+            return !uiConfigData?.[key]?.hideDefinition;
+          })
+          .map(([key, value]) => ({
             label: key,
             children: value,
-          })),
+          }));
+
+        setSidebarPaths(sidebar);
+        setDefinitionsGroup({
+          label: 'Definitions',
+          children: definitions,
         });
       }
     };
@@ -83,13 +102,27 @@ export function Layout() {
       setExpandedGroup(group);
       setSelectedChildLabel(child);
 
-      const groupContent =
-        group === 'Definitions'
-          ? definitionsGroup.children.find((c: { label: string }) => c.label === child)
-          : sidebarPaths.find((g) => g.label === group)?.children.find((c: { label: string }) => c.label === child);
+      let groupContent;
+
+      if (group === 'Definitions') {
+        const definition = definitionsGroup.children.find((c: { label: string }) => c.label === child);
+        if (definition) {
+          groupContent = definition;
+        }
+      } else {
+        const groupMatch = sidebarPaths.find((g) => g.label === group);
+        if (groupMatch) {
+          const childMatch = groupMatch.children.find((c: { label: string }) => c.label === child);
+          if (childMatch) {
+            groupContent = childMatch;
+          }
+        }
+      }
 
       if (groupContent) {
         setSelectedContent(groupContent.children);
+      } else {
+        setSelectedContent(null); // If not found or hidden
       }
     }
   }, [location.search, json, definitionsGroup, sidebarPaths]);

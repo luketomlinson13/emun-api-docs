@@ -50,7 +50,7 @@
     },
     "/PurgeProducts": {
       "post": {
-        "tags": ["EMUN1-Agency-API", "Parent:Products", "subParent:PurgeProducts"],
+        "tags": ["EMUN1-Agency-API", "Parent:Products", "subParent:PurgeProducts", "hideDefinition:true"],
         "summary": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "description": "Deletes all products associated with the currently authenticated vendor/manufacturer.",
         "operationId": "PurgeProducts_Post",
